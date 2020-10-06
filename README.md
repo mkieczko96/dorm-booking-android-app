@@ -25,3 +25,5 @@
     - https://blog.mindorks.com/essential-guide-for-designing-your-android-app-architecture-mvp-part-1-74efaf1cda40
     - https://medium.com/android-bits/android-app-from-scratch-part-1-model-view-presenter-b5f629f2d9a1
     - https://medium.com/@MiBLT/refactoring-to-mvp-b504a3774ffd
+    - https://github.com/futurice/android-best-practices
+    - https://github.com/ribot/android-guidelines/blob/master/project_and_code_guidelines.md
