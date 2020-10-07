@@ -27,3 +27,9 @@
     - https://medium.com/@MiBLT/refactoring-to-mvp-b504a3774ffd
     - https://github.com/futurice/android-best-practices
     - https://github.com/ribot/android-guidelines/blob/master/project_and_code_guidelines.md
+    - https://github.com/greenrobot/EventBus
+    - https://github.com/amitshekhariitbhu/Android-Debug-Database
+    - https://square.github.io/leakcanary/
+    - https://github.com/PhilJay/MPAndroidChart
+    - https://greenrobot.org/greendao/
+    - https://github.com/google/gson
