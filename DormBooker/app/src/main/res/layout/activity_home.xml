@@ -6,4 +6,152 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/facilityLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:scrollIndicators="bottom"
+                android:scrollbars="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/btn_gym_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Rounded">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_gym_room"
+                        android:src="@drawable/ic_gym_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_gym_room" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_tv_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Rounded">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_tv_room"
+                        android:src="@drawable/ic_tv_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_tv_room" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_laundry_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Rounded">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_laundry_room"
+                        android:src="@drawable/ic_laundry_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_laundry_room" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_billiard_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Rounded">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_billiard_room"
+                        android:src="@drawable/ic_pool_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_billiard_room" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_fitness_room"
+                    style="@style/Rounded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_fitness_room"
+                        android:src="@drawable/ic_fitness_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_fitness_room" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_tennis_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Rounded">
+
+                    <ImageButton
+                        style="@style/Rounded.Button"
+                        android:contentDescription="@string/text_tennis_room"
+                        android:src="@drawable/ic_tennis_light_button" />
+
+                    <TextView
+                        style="@style/Rounded.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_tennis_room" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
