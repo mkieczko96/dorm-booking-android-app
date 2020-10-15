@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".ui.HomeActivity">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_facility_gallery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -26,7 +27,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/facilityLinearLayout"
+                android:id="@+id/ll_facility_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -36,9 +37,9 @@
 
                 <LinearLayout
                     android:id="@+id/btn_gym_room"
+                    style="@style/Rounded"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Rounded">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         style="@style/Rounded.Button"
@@ -55,9 +56,9 @@
 
                 <LinearLayout
                     android:id="@+id/btn_tv_room"
+                    style="@style/Rounded"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Rounded">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         style="@style/Rounded.Button"
@@ -74,9 +75,9 @@
 
                 <LinearLayout
                     android:id="@+id/btn_laundry_room"
+                    style="@style/Rounded"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Rounded">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         style="@style/Rounded.Button"
@@ -93,9 +94,9 @@
 
                 <LinearLayout
                     android:id="@+id/btn_billiard_room"
+                    style="@style/Rounded"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Rounded">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         style="@style/Rounded.Button"
@@ -131,9 +132,9 @@
 
                 <LinearLayout
                     android:id="@+id/btn_tennis_room"
+                    style="@style/Rounded"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Rounded">
+                    android:layout_height="wrap_content">
 
                     <ImageButton
                         style="@style/Rounded.Button"
@@ -151,6 +152,28 @@
             </LinearLayout>
 
         </HorizontalScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_calendar_holder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/cv_facility_gallery"
+        app:layout_constraintStart_toStartOf="@+id/cv_facility_gallery"
+        app:layout_constraintTop_toBottomOf="@+id/cv_facility_gallery">
+
+        <com.kizitonwose.calendarview.CalendarView
+            android:id="@+id/exSevenCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cv_dayViewResource="@layout/calendar_day"
+            app:cv_orientation="horizontal"
+            app:cv_scrollMode="continuous"
+            app:cv_maxRowCount="1"/>
 
     </androidx.cardview.widget.CardView>
 
