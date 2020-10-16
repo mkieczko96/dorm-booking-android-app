@@ -33,3 +33,4 @@
     - https://github.com/PhilJay/MPAndroidChart
     - https://greenrobot.org/greendao/
     - https://github.com/google/gson
+    - https://github.com/kizitonwose/CalendarView
