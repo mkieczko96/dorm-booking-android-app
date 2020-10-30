@@ -36,6 +36,14 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Example GreenDao database init
+//        DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(this, "dorms-facility-booking-db", null);
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//        DaoMaster daoMaster = new DaoMaster(db);
+//        DaoSession daoSession = daoMaster.newSession();
+//        UserDao userDao = daoSession.getUserDao();
+
+
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = getWindowManager();
         wm.getDefaultDisplay().getMetrics(dm);
