@@ -25,10 +25,7 @@ public class Facility {
     @Column(name = "default_duration", nullable = false)
     private Long defaultBookingDuration;
 
-    @OneToOne
-    @JoinColumn(name = "admin_id", referencedColumnName = "id")
-    private User admin;
-
-    @OneToMany(mappedBy = "facility")
+    @OneToMany
+    @JoinColumn(name = "facility_id", referencedColumnName = "id")
     private List<Booking> bookings;
 }

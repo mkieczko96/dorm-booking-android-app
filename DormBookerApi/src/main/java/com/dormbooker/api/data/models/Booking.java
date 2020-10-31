@@ -22,12 +22,4 @@ public class Booking {
 
     @Column(name = "duration", nullable = false)
     private Long durationInMinutes;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "facility_id", referencedColumnName = "id")
-    private Facility facility;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
 }

@@ -23,7 +23,8 @@ public class User {
     @Column(name = "room", nullable = false)
     private Long room;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Booking> bookings;
 
     // add some account setting
