@@ -1,5 +1,6 @@
 package com.dormbooker.api.data.controllers;
 
+import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.assertj.core.data.Offset;
@@ -20,7 +21,7 @@ class UserControllerTest {
     }
 
     @Test
-    void findUserById_returnsOneUserWhenIdExists_test() {
+    void findUserById_returnsOneUserWhenIdExists_test() throws ResourceNotExistsException {
         Assertions.assertThat(userController.findUserById(1)).isNotNull();
     }
 

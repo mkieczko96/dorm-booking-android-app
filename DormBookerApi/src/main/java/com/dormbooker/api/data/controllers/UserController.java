@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController @RequestMapping("/api/users")
+@RestController
+@RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
@@ -21,13 +22,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable("id")long id) throws ResourceNotExistsException {
+    public ResponseEntity<User> findUserById(@PathVariable("id") long id) throws ResourceNotExistsException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: " + id + " not found."));
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/{id}/bookings")
-    public List<Booking> findAllBookingsByUserId(@PathVariable("id")long id) throws ResourceNotExistsException{
+    public List<Booking> findAllBookingsByUserId(@PathVariable("id") long id) throws ResourceNotExistsException {
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: \" + id + \" not found.")).getBookings();
     }
 
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User saveUser(@PathVariable("id")long id, @RequestBody User updatedUser) {
+    public User saveUser(@PathVariable("id") long id, @RequestBody User updatedUser) {
         return userRepository.findById(id)
                 .map(u -> {
                     u.setFirstName(updatedUser.getFirstName());
