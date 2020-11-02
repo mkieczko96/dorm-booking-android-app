@@ -1,12 +1,12 @@
 package com.dormbooker.api.data.controllers;
 
+import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
 import com.dormbooker.api.data.models.Booking;
 import com.dormbooker.api.data.models.User;
 import com.dormbooker.api.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable("id")long id) throws ResourceAccessException {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceAccessException("User not found."));
+    public ResponseEntity<User> findUserById(@PathVariable("id")long id) throws ResourceNotExistsException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: " + id + " not found."));
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/{id}/bookings")
-    public List<Booking> findAllBookingsByUserId(@PathVariable("id")long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceAccessException("User not found.")).getBookings();
+    public List<Booking> findAllBookingsByUserId(@PathVariable("id")long id) throws ResourceNotExistsException{
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: \" + id + \" not found.")).getBookings();
     }
 
     @PostMapping

@@ -6,6 +6,8 @@ import com.dormbooker.api.data.models.Booking;
 import com.dormbooker.api.data.repositories.BookingRepository;
 import lombok.AllArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
+import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +26,9 @@ public class BookingController {
     @GetMapping
     public List<Booking> findAllBookings(@And({
             @Spec(path = "userId", params = "user-id", spec = Equal.class),
-            @Spec(path = "facilityId", params = "facility-id", spec = Equal.class)
+            @Spec(path = "facilityId", params = "facility-id", spec = Equal.class),
+            @Spec(path = "beginAt", params = "begin-after", spec = GreaterThanOrEqual.class),
+            @Spec(path = "beginAt", params = "begin-before", spec = LessThanOrEqual.class)
     }) Specification<Booking> bookingSpecification) {
         return bookingRepository.findAll(bookingSpecification);
     }
