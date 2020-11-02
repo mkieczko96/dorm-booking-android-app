@@ -11,10 +11,10 @@ public class Booking {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "facility_id", nullable = false, updatable = false, insertable = false)
+    @Column(name = "facility_id", nullable = false, updatable = false, insertable = true)
     private Long facilityId;
 
-    @Column(name = "user_id", nullable = false, updatable = false, insertable = false)
+    @Column(name = "user_id", nullable = false, updatable = true, insertable = true)
     private Long userId;
 
     @Column(name = "begin_at", nullable = false)
