@@ -10,7 +10,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
-@RestController @RequestMapping("/api/v1/users")
+@RestController @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
