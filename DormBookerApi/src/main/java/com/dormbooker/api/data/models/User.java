@@ -27,13 +27,15 @@ public class User {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Booking> bookings;
 
-    // add some account setting
-    // all user device list
+    // TODO: Add some account setting
+    // TODO: Add all user device list
 
-    // Change it to credentials class or something
+    // TODO: Change it to credentials class or something
     @Column(name = "email_address", nullable = false)
     private String emailAddress;
 
+    // TODO: Change it to credentials class or something
+    // TODO: Hash the password
     @Column(name = "password", nullable = false)
     private String password;
 

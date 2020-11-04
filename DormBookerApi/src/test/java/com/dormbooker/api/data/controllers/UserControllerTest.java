@@ -1,12 +1,16 @@
 package com.dormbooker.api.data.controllers;
 
 import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
+import com.dormbooker.api.data.models.User;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 @SpringBootTest
 class UserControllerTest {
@@ -41,5 +45,14 @@ class UserControllerTest {
 
     @Test
     void saveUser() {
+//        BCryptPasswordEncoder hash = new BCryptPasswordEncoder(16);
+//
+//        List<User> users = userController.findAllUsers();
+//        for (User u: users) {
+//            u.setPassword(hash.encode(u.getPassword()));
+//            userController.saveUser(u.getId(), u);
+//        }
+//
+//        Assertions.assertThat(users.size()).isEqualTo(411);
     }
 }

@@ -23,6 +23,7 @@ public class BookingController {
 
     private final BookingRepository bookingRepository;
 
+    //TODO: Add sorting by beginAt date.
     @GetMapping
     public List<Booking> findAllBookings(@And({
             @Spec(path = "userId", params = "user-id", spec = Equal.class),
