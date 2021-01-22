@@ -24,7 +24,7 @@ class BookingControllerTest {
     void saveNewBooking_addsNewBookingToCollection_test() {
         Booking booking = new Booking();
         booking.setUserId(1L);
-        booking.setFacilityId(1L);
+//        booking.setFacilityId(1L);
         booking.setBeginAt(1604318400L);
         booking.setDurationInMinutes(30L);
 

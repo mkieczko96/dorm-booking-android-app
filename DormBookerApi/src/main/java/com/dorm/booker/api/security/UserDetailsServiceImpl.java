@@ -1,4 +1,4 @@
-package com.dormbooker.api;
+package com.dormbooker.api.security;
 
 import com.dormbooker.api.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

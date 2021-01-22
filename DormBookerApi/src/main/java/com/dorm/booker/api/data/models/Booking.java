@@ -1,5 +1,6 @@
 package com.dormbooker.api.data.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,9 +12,6 @@ public class Booking {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "facility_id", nullable = false, updatable = false, insertable = true)
-    private Long facilityId;
-
     @Column(name = "user_id", nullable = false, updatable = true, insertable = true)
     private Long userId;
 
@@ -22,4 +20,9 @@ public class Booking {
 
     @Column(name = "duration", nullable = false)
     private Long durationInMinutes;
+
+    @ManyToOne
+    @JoinColumn(name = "facility_id", nullable = false)
+    @JsonIgnoreProperties("bookings")
+    Facility facility;
 }

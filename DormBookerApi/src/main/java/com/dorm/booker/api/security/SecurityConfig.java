@@ -1,5 +1,7 @@
-package com.dormbooker.api;
+package com.dormbooker.api.security;
 
+import com.dormbooker.api.security.jwt.JwtConfigurer;
+import com.dormbooker.api.security.jwt.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

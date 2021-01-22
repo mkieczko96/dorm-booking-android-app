@@ -1,4 +1,4 @@
-package com.dormbooker.api;
+package com.dormbooker.api.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

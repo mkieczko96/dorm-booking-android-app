@@ -1,5 +1,7 @@
 package com.dormbooker.api.data.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.Expose;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,8 +26,4 @@ public class Facility {
 
     @Column(name = "default_duration", nullable = false)
     private Long defaultBookingDuration;
-
-    @OneToMany
-    @JoinColumn(name = "facility_id", referencedColumnName = "id")
-    private List<Booking> bookings;
 }

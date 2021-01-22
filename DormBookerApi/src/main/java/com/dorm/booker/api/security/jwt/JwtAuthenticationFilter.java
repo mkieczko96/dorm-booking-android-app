@@ -1,4 +1,4 @@
-package com.dormbooker.api;
+package com.dormbooker.api.security.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

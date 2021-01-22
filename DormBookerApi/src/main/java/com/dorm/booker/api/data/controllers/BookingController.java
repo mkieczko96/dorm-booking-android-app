@@ -11,6 +11,7 @@ import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,12 @@ public class BookingController {
     public ResponseEntity<Booking> findBookingById(@PathVariable("id") long id) {
         Booking booking = bookingRepository.findById(id).orElseThrow();
         return ResponseEntity.ok().body(booking);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> removeBookingById(@PathVariable("id") long id) {
+        bookingRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.GONE).body("Booking #" + id + " was deleted.");
     }
 
     @PostMapping

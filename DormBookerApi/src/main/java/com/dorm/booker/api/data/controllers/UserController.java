@@ -1,10 +1,10 @@
 package com.dormbooker.api.data.controllers;
 
 import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.Booking;
 import com.dormbooker.api.data.models.User;
 import com.dormbooker.api.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@AllArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public List<User> findAllUsers() {
@@ -27,11 +27,6 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @GetMapping("/{id}/bookings")
-    public List<Booking> findAllBookingsByUserId(@PathVariable("id") long id) throws ResourceNotExistsException {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: \" + id + \" not found.")).getBookings();
-    }
-
     @PostMapping
     public User saveNewUser(@RequestBody User newUser) {
         return userRepository.save(newUser);
@@ -41,11 +36,11 @@ public class UserController {
     public User saveUser(@PathVariable("id") long id, @RequestBody User updatedUser) {
         return userRepository.findById(id)
                 .map(u -> {
-//                    u.setPassword(updatedUser.getPassword());
+                    u.setPassword(updatedUser.getPassword());
                     u.setFirstName(updatedUser.getFirstName());
                     u.setLastName(updatedUser.getLastName());
                     u.setRoom(updatedUser.getRoom());
-                    u.setEmailAddress(updatedUser.getEmailAddress());
+                    u.setUsername(updatedUser.getUsername());
                     u.setLastModifiedOn(System.currentTimeMillis() / 1000L);
                     u.setExpiresOn(updatedUser.getExpiresOn());
                     return userRepository.save(u);
