@@ -1,4 +1,4 @@
-package com.dormbooker.api.data.exceptions;
+package com.dorm.booker.api.data.exceptions;
 
 public class ResourceNotExistsException extends Exception {
 

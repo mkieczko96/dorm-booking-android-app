@@ -1,6 +1,6 @@
-package com.dormbooker.api.data.repositories;
+package com.dorm.booker.api.data.repositories;
 
-import com.dormbooker.api.data.models.Facility;
+import com.dorm.booker.api.data.models.Facility;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

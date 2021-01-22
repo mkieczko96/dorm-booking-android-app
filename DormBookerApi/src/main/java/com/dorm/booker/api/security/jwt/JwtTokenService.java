@@ -1,4 +1,4 @@
-package com.dormbooker.api.security.jwt;
+package com.dorm.booker.api.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,17 @@ import java.util.List;
 @Service
 public class JwtTokenService {
 
-    @Value("${security.jwt.token.secret-key:secret}")
-    private String secretKey = "secret";
+    private final Long expirationInMillis; //30 minutes by default
+    private final UserDetailsService userDetailsService;
+    private String secretKey;
 
-    @Value("${security.jwt.token.expire-length:1800000}")
-    private Long expirationInMilis = 60L * 30L * 1000L; //30 minutes by default
-
-    @Qualifier("userDetailsServiceImpl")
-    @Autowired
-    UserDetailsService userDetailsService;
+    public JwtTokenService(@Value("${security.jwt.token.secret-key:secret}") String secretKey,
+                           @Value("${security.jwt.token.expire-length:1800000}") Long expirationInMillis,
+                           @Autowired @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+        this.secretKey = secretKey;
+        this.expirationInMillis = expirationInMillis;
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostConstruct
     protected void init() {
@@ -37,17 +39,18 @@ public class JwtTokenService {
     public String createToken(String username, List<String> authorities) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("authorities", authorities);
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("University of Technology")
                 .setAudience("Booker")
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationInMilis))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationInMillis))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public Authentication getAuthentication(String t){
+    public Authentication getAuthentication(String t) {
         UserDetails user = userDetailsService.loadUserByUsername(getUsername(t));
         return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
@@ -63,7 +66,7 @@ public class JwtTokenService {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;

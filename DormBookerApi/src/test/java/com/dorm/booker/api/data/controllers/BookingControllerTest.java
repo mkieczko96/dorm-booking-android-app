@@ -1,15 +1,12 @@
-package com.dormbooker.api.data.controllers;
+package com.dorm.booker.api.data.controllers;
 
-import com.dormbooker.api.data.exceptions.BookingNotUpdatableException;
-import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.Booking;
+import com.dorm.booker.api.data.exceptions.BookingNotUpdatableException;
+import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
+import com.dorm.booker.api.data.models.Booking;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import static org.junit.jupiter.api.Assertions.*;
 

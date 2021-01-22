@@ -1,21 +1,21 @@
-package com.dormbooker.api.data.models;
+package com.dorm.booker.api.data.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.gson.annotations.Expose;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
-@Getter @Setter
-@Entity @Table(name = "facilities")
+@Getter
+@Setter
+@Entity
+@Table(name = "facilities")
 public class Facility {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "admin_id", nullable = true, updatable = false, insertable = false)
+    @Column(name = "admin_id", updatable = false, insertable = false)
     private Long adminId;
 
     @Column(name = "name", nullable = false)

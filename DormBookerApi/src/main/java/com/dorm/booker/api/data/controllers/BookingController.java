@@ -1,9 +1,9 @@
-package com.dormbooker.api.data.controllers;
+package com.dorm.booker.api.data.controllers;
 
-import com.dormbooker.api.data.exceptions.BookingNotUpdatableException;
-import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.Booking;
-import com.dormbooker.api.data.repositories.BookingRepository;
+import com.dorm.booker.api.data.exceptions.BookingNotUpdatableException;
+import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
+import com.dorm.booker.api.data.models.Booking;
+import com.dorm.booker.api.data.repositories.BookingRepository;
 import lombok.AllArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
@@ -59,7 +59,7 @@ public class BookingController {
             booking.setUserId(updatedBooking.getUserId());
             booking.setBeginAt(updatedBooking.getBeginAt());
             booking.setDurationInMinutes(updatedBooking.getDurationInMinutes());
-        } else if ((booking.getBeginAt() + (booking.getDurationInMinutes()*60)) > (System.currentTimeMillis()/1000L)) {
+        } else if ((booking.getBeginAt() + (booking.getDurationInMinutes() * 60)) > (System.currentTimeMillis() / 1000L)) {
             booking.setDurationInMinutes(updatedBooking.getDurationInMinutes());
         } else {
             throw new BookingNotUpdatableException("Booking: " + id + " could not be updated because it ended.");

@@ -1,7 +1,7 @@
-package com.dormbooker.api.security;
+package com.dorm.booker.api.security;
 
-import com.dormbooker.api.security.jwt.JwtConfigurer;
-import com.dormbooker.api.security.jwt.JwtTokenService;
+import com.dorm.booker.api.security.jwt.JwtConfigurer;
+import com.dorm.booker.api.security.jwt.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -22,16 +22,19 @@ import javax.sql.DataSource;
 @Component
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    @Qualifier("datasource")
-    DataSource dataSource;
+    private final DataSource dataSource;
 
-    @Autowired
-    @Qualifier("userDetailsServiceImpl")
-    UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    JwtTokenService jwtTokenService;
+    private final JwtTokenService jwtTokenService;
+
+    public SecurityConfig(@Autowired @Qualifier("datasource") DataSource dataSource,
+                          @Autowired @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+                          @Autowired JwtTokenService jwtTokenService) {
+        this.dataSource = dataSource;
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenService = jwtTokenService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

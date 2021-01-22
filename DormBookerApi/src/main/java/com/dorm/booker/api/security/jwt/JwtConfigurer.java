@@ -1,4 +1,4 @@
-package com.dormbooker.api.security.jwt;
+package com.dorm.booker.api.security.jwt;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +13,7 @@ public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilt
     }
 
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) {
         JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtTokenService);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }

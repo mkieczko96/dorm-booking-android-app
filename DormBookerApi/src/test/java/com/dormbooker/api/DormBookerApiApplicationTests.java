@@ -1,8 +1,8 @@
 package com.dormbooker.api;
 
-import com.dormbooker.api.data.controllers.BookingController;
-import com.dormbooker.api.data.controllers.UserController;
-import com.dormbooker.api.data.controllers.FacilityController;
+import com.dorm.booker.api.data.controllers.BookingController;
+import com.dorm.booker.api.data.controllers.UserController;
+import com.dorm.booker.api.data.controllers.FacilityController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,21 +1,14 @@
-package com.dormbooker.api.data.controllers;
+package com.dorm.booker.api.data.controllers;
 
-import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.User;
-import lombok.SneakyThrows;
+import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
+import com.dorm.booker.api.data.models.User;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @SpringBootTest
 class UserControllerTest {

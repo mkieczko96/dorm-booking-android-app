@@ -1,10 +1,9 @@
-package com.dormbooker.api.data.controllers;
+package com.dorm.booker.api.data.controllers;
 
-import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.User;
-import com.dormbooker.api.data.repositories.UserRepository;
+import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
+import com.dorm.booker.api.data.models.User;
+import com.dorm.booker.api.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@AllArgsConstructor
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     @GetMapping
     public List<User> findAllUsers() {

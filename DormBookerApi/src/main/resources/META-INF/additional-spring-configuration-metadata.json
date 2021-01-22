@@ -1,8 +1,8 @@
 {
   "properties": [
     {
-      "name": "jwt.secret",
+      "name": "security.jwt.token.secret-key",
       "type": "java.lang.String",
-      "description": "Secret for generating JWT."
-  }
-] }
+      "description": "Description for security.jwt.token.secret-key."
+    }
+  ] }

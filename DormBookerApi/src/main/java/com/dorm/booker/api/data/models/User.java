@@ -1,4 +1,4 @@
-package com.dormbooker.api.data.models;
+package com.dorm.booker.api.data.models;
 
 
 import lombok.Getter;

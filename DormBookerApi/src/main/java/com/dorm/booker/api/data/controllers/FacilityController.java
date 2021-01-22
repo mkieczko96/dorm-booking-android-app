@@ -1,8 +1,8 @@
-package com.dormbooker.api.data.controllers;
+package com.dorm.booker.api.data.controllers;
 
-import com.dormbooker.api.data.exceptions.ResourceNotExistsException;
-import com.dormbooker.api.data.models.Facility;
-import com.dormbooker.api.data.repositories.FacilityRepository;
+import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
+import com.dorm.booker.api.data.models.Facility;
+import com.dorm.booker.api.data.repositories.FacilityRepository;
 import lombok.AllArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
@@ -26,12 +26,12 @@ public class FacilityController {
     @GetMapping
     public List<Facility> findAllFacilities(@And({
             @Spec(path = "name", params = "name", spec = Like.class)
-    })Specification<Facility> facilitySpecification) {
+    }) Specification<Facility> facilitySpecification) {
         return facilityRepository.findAll(facilitySpecification);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Facility> findFacilityById(@PathVariable("id") long id) throws ResourceNotExistsException{
+    public ResponseEntity<Facility> findFacilityById(@PathVariable("id") long id) throws ResourceNotExistsException {
         Facility facility = facilityRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("Facility: " + id + " not found."));
         return ResponseEntity.ok().body(facility);
     }

@@ -1,4 +1,4 @@
-package com.dormbooker.api.data.models;
+package com.dorm.booker.api.data.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -12,7 +12,7 @@ public class Booking {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, updatable = true, insertable = true)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Column(name = "begin_at", nullable = false)
