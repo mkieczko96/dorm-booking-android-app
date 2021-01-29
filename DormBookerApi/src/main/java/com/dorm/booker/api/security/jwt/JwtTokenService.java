@@ -78,7 +78,7 @@ public class JwtTokenService {
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(t);
-
+            System.out.println(t);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             e.printStackTrace();

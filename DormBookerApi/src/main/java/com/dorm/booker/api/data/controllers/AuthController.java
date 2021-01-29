@@ -3,6 +3,7 @@ package com.dorm.booker.api.data.controllers;
 import com.dorm.booker.api.data.repositories.UserRepository;
 import com.dorm.booker.api.security.jwt.JwtTokenService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.logging.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
@@ -37,7 +39,6 @@ public class AuthController {
         try {
             String[] credentials = new String(Base64.getDecoder().decode(basicToken.substring(6))).split(":");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credentials[0], credentials[1]));
-
             UserDetails user = repository.findUserByUsername(credentials[0])
                     .orElseThrow(() -> new UsernameNotFoundException("Username " + credentials[0] + " not found."));
 
@@ -49,6 +50,7 @@ public class AuthController {
             Map<Object, Object> body = new HashMap<>();
             body.put("username", user.getUsername());
             body.put("token", token);
+
             return ResponseEntity.ok(body);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid credentials supplied");

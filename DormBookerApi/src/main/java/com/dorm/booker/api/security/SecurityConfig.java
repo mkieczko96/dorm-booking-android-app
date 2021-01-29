@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 @Configuration
 @Component

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:context=".ui.fragment.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.kizitonwose.calendarview.CalendarView
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_primary"
+            android:clickable="true"
+            android:focusable="true"
+            app:cv_dayViewResource="@layout/calendar_day_layout"
+            app:cv_hasBoundaries="true"
+            app:cv_inDateStyle="none"
+            app:cv_maxRowCount="1"
+            app:cv_monthHeaderResource="@layout/calendar_month_layout"
+            app:cv_orientation="horizontal"
+            app:cv_outDateStyle="none"
+            app:cv_scrollMode="continuous" />
+
+        <ListView
+            android:id="@+id/event_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp"
+            android:nestedScrollingEnabled="true"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="8dp"
+            android:visibility="invisible"
+            tools:listitem="@layout/calendar_event_list_item" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/no_events_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No events"
+        android:textColor="@color/gray_400"
+        android:textSize="22sp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_create_booking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/fab_description"
+        app:backgroundTint="@color/design_default_color_primary"
+        app:srcCompat="@drawable/ic_fab_24dp"
+        app:tint="@color/white" />
+
+</FrameLayout>

@@ -18,8 +18,8 @@ public class Booking {
     @Column(name = "begin_at", nullable = false)
     private Long beginAt; // unix timestamp - milliseconds elapsed since 1970-01-01 00:00
 
-    @Column(name = "duration", nullable = false)
-    private Long durationInMinutes;
+    @Column(name = "end_at", nullable = false)
+    private Long endAt;
 
     @ManyToOne
     @JoinColumn(name = "facility_id", nullable = false)

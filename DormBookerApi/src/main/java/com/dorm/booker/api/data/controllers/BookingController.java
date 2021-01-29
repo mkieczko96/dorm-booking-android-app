@@ -5,6 +5,7 @@ import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
 import com.dorm.booker.api.data.models.Booking;
 import com.dorm.booker.api.data.repositories.BookingRepository;
 import lombok.AllArgsConstructor;
+import net.kaczmarzyk.spring.data.jpa.domain.Between;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
@@ -24,13 +25,12 @@ public class BookingController {
 
     private final BookingRepository bookingRepository;
 
-    //TODO: Add sorting by beginAt date.
     @GetMapping
     public List<Booking> findAllBookings(@And({
             @Spec(path = "userId", params = "user-id", spec = Equal.class),
             @Spec(path = "facilityId", params = "facility-id", spec = Equal.class),
-            @Spec(path = "beginAt", params = "begin-after", spec = GreaterThanOrEqual.class),
-            @Spec(path = "beginAt", params = "begin-before", spec = LessThanOrEqual.class)
+            @Spec(path = "beginAt", params = "between", spec = GreaterThanOrEqual.class),
+            @Spec(path = "beginAt", params = "and", spec = LessThanOrEqual.class)
     }) Specification<Booking> bookingSpecification) {
         return bookingRepository.findAll(bookingSpecification);
     }
@@ -58,9 +58,9 @@ public class BookingController {
         if (booking.getBeginAt() > (System.currentTimeMillis() / 1000L)) {
             booking.setUserId(updatedBooking.getUserId());
             booking.setBeginAt(updatedBooking.getBeginAt());
-            booking.setDurationInMinutes(updatedBooking.getDurationInMinutes());
-        } else if ((booking.getBeginAt() + (booking.getDurationInMinutes() * 60)) > (System.currentTimeMillis() / 1000L)) {
-            booking.setDurationInMinutes(updatedBooking.getDurationInMinutes());
+            booking.setEndAt(updatedBooking.getEndAt());
+        } else if (booking.getEndAt() > (System.currentTimeMillis() / 1000L)) {
+            booking.setEndAt(updatedBooking.getEndAt());
         } else {
             throw new BookingNotUpdatableException("Booking: " + id + " could not be updated because it ended.");
         }

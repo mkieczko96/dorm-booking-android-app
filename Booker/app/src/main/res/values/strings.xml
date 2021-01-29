@@ -1,0 +1,86 @@
+<resources>
+    <!-- Remove before deploy -->
+    <string name="username">210220@edu.p.lodz.pl</string>
+    <string name="password">qwe@123</string>
+
+    <!-- CalendarView strings -->
+    <!--   Day Headers   -->
+    <string name="first_day_header">MON</string>
+    <string name="second_day_header">TUE</string>
+    <string name="third_day_header">WED</string>
+    <string name="fourth_day_header">THU</string>
+    <string name="fifth_day_header">FRI</string>
+    <string name="sixth_day_header">SAT</string>
+    <string name="seventh_day_header">SUN</string>
+
+    <!-- Placeholders  -->
+    <string name="day_layout_placeholder">22</string>
+    <string name="selected_day_placeholder">1 January 2020</string>
+    <string name="month_layout_placeholder">January 2020</string>
+    <string name="event_placeholder">Laundry room</string>
+
+    <!-- NewBookingFragment strings -->
+    <string name="new_booking_facility_hint">Select facility</string>
+
+    <!--  BookingNotificationItem  -->
+    <string name="notification_time_placeholder">1 hour before</string>
+    <string name="notification_icon_description">Notification icon</string>
+    <string name="notification_remove_button_description">Remove notification button</string>
+    <string name="notification_time_dialog_title">Notify me </string>
+    <string-array name="notification_time_options">
+        <item>When booking starts</item>
+        <item>10 minutes before</item>
+        <item>15 minutes before</item>
+        <item>30 minutes before</item>
+        <item>1 hour before</item>
+        <item>2 hours before</item>
+        <item>24 hours before</item>
+        <item>2 days before</item>
+        <item>1 week before</item>
+    </string-array>
+
+    <!-- Other shit -->
+    <string name="app_name">Booker</string>
+    <string name="prompt_username">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="welcome">"Authenticated"</string>
+    <string name="invalid_username">Invalid username</string>
+    <string name="invalid_password">Password must be at least 5 characters long</string>
+    <string name="login_failed">"Authentication failed"</string>
+
+    <string name="pref_file">"com.booker.pref.file"</string>
+
+    <string name="iv_drawer_background">Profile background</string>
+    <string name="action_sign_out">Sign Out</string>
+    <string name="action_home">Home</string>
+    <string name="action_calendar">My Reservations</string>
+    <string name="action_settings">Settings</string>
+    <string name="nav_header_username">Jane Doe</string>
+    <string name="nav_header_room">Room %1$d</string>
+    <string name="nav_header_description">Abstract header background</string>
+    <string name="open_nav_drawer">Navigation Drawer Open</string>
+    <string name="close_nav_drawer">Navigation Drawer Close</string>
+    <string name="icon_placeholder">Icon placeholder</string>
+    <string name="reservation_end_date">End</string>
+    <string name="reservation_begin_date">Begin</string>
+    <string name="booking_begin_time">Booking begin date and time</string>
+    <string name="booking_end_time">Booking end date and time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_booking_button">Edit Booking Button</string>
+    <string name="delete_booking_button">Delete Booking Button</string>
+    <string name="facility_name_placeholder">Laundry</string>
+    <string name="booking_duration">Duration:</string>
+    <string name="booking_begin_date_placeholder">12-Jan-2021</string>
+    <string name="booking_duration_placeholder">%1$d hours</string>
+    <string name="description_laundry_room">Laundry room</string>
+    <string name="label_laundry">Laundry</string>
+    <string name="label_gym">Gym</string>
+    <string name="label_table_tennis">Tennis</string>
+    <string name="label_tv">TV</string>
+    <string name="label_fitness">Fitness</string>
+    <string name="label_pool">Pool</string>
+    <string name="fab_description">Add new booking - floating action button</string>
+
+</resources>

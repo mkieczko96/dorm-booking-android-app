@@ -5,6 +5,8 @@ import com.dorm.booker.api.data.models.User;
 import com.dorm.booker.api.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,12 @@ public class UserController {
     public ResponseEntity<User> findUserById(@PathVariable("id") long id) throws ResourceNotExistsException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotExistsException("User: " + id + " not found."));
         return ResponseEntity.ok().body(user);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> findCurrentUser(@AuthenticationPrincipal UserDetails user) {
+        User u = (User) user;
+        return ResponseEntity.ok(u);
     }
 
     @PostMapping
