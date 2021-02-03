@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void onFabClick(View view) {
-        NewBookingFragment fragment = NewBookingFragment.newInstance(currentUserId, selectedDate);
+        NewBookingFragment fragment = NewBookingFragment.newInstance();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_placeholder, fragment, fragment.getClass().getSimpleName())
                 .addToBackStack(fragment.getClass().getSimpleName())

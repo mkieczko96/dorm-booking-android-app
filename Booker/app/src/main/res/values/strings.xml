@@ -20,7 +20,7 @@
     <string name="event_placeholder">Laundry room</string>
 
     <!-- NewBookingFragment strings -->
-    <string name="new_booking_facility_hint">Select facility</string>
+    <string name="facility_chooser_title">Select facility</string>
 
     <!--  BookingNotificationItem  -->
     <string name="notification_time_placeholder">1 hour before</string>
