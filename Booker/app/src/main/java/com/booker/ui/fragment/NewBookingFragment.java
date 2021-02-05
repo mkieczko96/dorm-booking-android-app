@@ -113,6 +113,9 @@ public class NewBookingFragment extends DialogFragment {
 
     // TODO: Load data from REST API
     private ArrayList<FacilityDialogItem> getFacilityDialogArrayList() {
+
+
+
         ArrayList<FacilityDialogItem> items = new ArrayList<>();
         items.add(new FacilityDialogItem(R.drawable.ic_laundry_light_button, "Laundry"));
         items.add(new FacilityDialogItem(R.drawable.ic_gym_light_button, "Gym"));

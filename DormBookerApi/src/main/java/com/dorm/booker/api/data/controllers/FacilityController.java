@@ -4,8 +4,11 @@ import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
 import com.dorm.booker.api.data.models.Facility;
 import com.dorm.booker.api.data.repositories.FacilityRepository;
 import lombok.AllArgsConstructor;
+import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
+import net.kaczmarzyk.spring.data.jpa.domain.NotLike;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Or;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +28,8 @@ public class FacilityController {
 
     @GetMapping
     public List<Facility> findAllFacilities(@And({
-            @Spec(path = "name", params = "name", spec = Like.class)
+            @Spec(path = "name", params = "name", spec = Like.class),
+            @Spec(path = "floor", params = "floor", spec = Equal.class)
     }) Specification<Facility> facilitySpecification) {
         return facilityRepository.findAll(facilitySpecification);
     }
