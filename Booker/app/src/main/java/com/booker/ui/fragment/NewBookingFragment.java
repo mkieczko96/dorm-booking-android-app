@@ -36,11 +36,6 @@ import java.util.ArrayList;
 
 import lombok.NoArgsConstructor;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NewBookingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 @NoArgsConstructor
 public class NewBookingFragment extends DialogFragment {
 
@@ -50,17 +45,6 @@ public class NewBookingFragment extends DialogFragment {
 
     public static NewBookingFragment newInstance() {
         return new NewBookingFragment();
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable

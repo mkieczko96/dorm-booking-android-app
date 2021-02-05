@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.booker.R;
 import com.booker.api.ApiClient;
@@ -44,7 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import kotlin.Unit;
 import lombok.NoArgsConstructor;
@@ -54,12 +52,12 @@ import retrofit2.Response;
 
 @NoArgsConstructor
 public class HomeFragment extends Fragment {
+    private final LocalDate today = LocalDate.now();
     private FragmentHomeBinding binding;
     private CalendarView calendarView;
     private ListView calendarEventsView;
     private FloatingActionButton fab;
     private long currentUserId;
-    private final LocalDate today = LocalDate.now();
     private LocalDate selectedDate = null;
     private BookingsItemAdapter adapter;
     private HashMap<LocalDate, List<Booking>> bookings = new HashMap<>();
@@ -123,13 +121,13 @@ public class HomeFragment extends Fragment {
     private String getToken() {
         Activity activity = getActivity();
 
-        assert activity!=null;
+        assert activity != null;
         return activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
                 .getString("dorm.booker.jwt", null);
     }
 
     private void getUserBookings() {
-        String bearer = "Bearer "  + getToken();
+        String bearer = "Bearer " + getToken();
 
         Call<List<Booking>> call = ApiClient
                 .getBookingsService()
@@ -147,10 +145,8 @@ public class HomeFragment extends Fragment {
                                 .toLocalDate();
                         bookings.computeIfAbsent(localDate, k -> new ArrayList<>()).add(b);
                     });
-
                     calendarView.notifyCalendarChanged();
                     setSelectedDate(today);
-                    Log.i("DEB", "Loaded all bookings");
                 } else {
                     Log.e("BOOK", response.errorBody().toString());
                 }
@@ -190,8 +186,8 @@ public class HomeFragment extends Fragment {
     }
 
     class DayViewContainer extends ViewContainer {
-        CalendarDay day;
         final CalendarDayLayoutBinding binding;
+        CalendarDay day;
 
         public DayViewContainer(@NotNull View view) {
             super(view);
