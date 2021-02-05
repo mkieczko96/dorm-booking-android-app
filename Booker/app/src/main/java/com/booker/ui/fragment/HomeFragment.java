@@ -1,5 +1,6 @@
 package com.booker.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.booker.R;
 import com.booker.api.ApiClient;
@@ -45,40 +47,33 @@ import java.util.Locale;
 import java.util.Map;
 
 import kotlin.Unit;
+import lombok.NoArgsConstructor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-// TODO: Refactor
+@NoArgsConstructor
 public class HomeFragment extends Fragment {
-    FragmentHomeBinding binding;
-
-    CalendarView calendarView;
-    ListView calendarEventsView;
-    FloatingActionButton fab;
-
-    long currentUserId;
-    LocalDate today = LocalDate.now();
-    LocalDate selectedDate = null;
-    BookingsItemAdapter adapter;
-    Map<LocalDate, List<Booking>> bookings = new HashMap<>();
-
-    public HomeFragment() {
-
-    }
-
-    public HomeFragment(long userId) {
-        currentUserId = userId;
-    }
+    private FragmentHomeBinding binding;
+    private CalendarView calendarView;
+    private ListView calendarEventsView;
+    private FloatingActionButton fab;
+    private long currentUserId;
+    private final LocalDate today = LocalDate.now();
+    private LocalDate selectedDate = null;
+    private BookingsItemAdapter adapter;
+    private HashMap<LocalDate, List<Booking>> bookings = new HashMap<>();
 
     public static HomeFragment newInstance(long userId) {
-        return new HomeFragment(userId);
+        HomeFragment newFragment = new HomeFragment();
+        newFragment.currentUserId = userId;
+        return newFragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -101,6 +96,9 @@ public class HomeFragment extends Fragment {
 
     private void onFabClick(View view) {
         NewBookingFragment fragment = NewBookingFragment.newInstance();
+        Activity activity = getActivity();
+
+        assert activity != null;
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_placeholder, fragment, fragment.getClass().getSimpleName())
                 .addToBackStack(fragment.getClass().getSimpleName())
@@ -108,7 +106,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setCalendarView(CalendarView calendarView) {
-        calendarView.setup(YearMonth.of(2020, 1), YearMonth.of(2022, 12), DayOfWeek.MONDAY);
+        calendarView.setup(YearMonth.of(2021, 1), YearMonth.of(2021, 12), DayOfWeek.MONDAY);
         calendarView.setDayBinder(new DayViewBinder());
         calendarView.setMonthHeaderBinder(new MonthViewBinder());
         calendarView.setMonthScrollListener(this::onMonthScroll);
@@ -122,10 +120,16 @@ public class HomeFragment extends Fragment {
         return Unit.INSTANCE;
     }
 
-    private void getUserBookings() {
-        String bearer = "Bearer "  + getActivity()
-                .getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
+    private String getToken() {
+        Activity activity = getActivity();
+
+        assert activity!=null;
+        return activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
                 .getString("dorm.booker.jwt", null);
+    }
+
+    private void getUserBookings() {
+        String bearer = "Bearer "  + getToken();
 
         Call<List<Booking>> call = ApiClient
                 .getBookingsService()
@@ -183,12 +187,6 @@ public class HomeFragment extends Fragment {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     class DayViewContainer extends ViewContainer {
