@@ -4,23 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/facility_dialog_item_icon"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_calendar_24dp"
-        android:contentDescription="TODO" />
-
     <TextView
         android:id="@+id/facility_dialog_item_title"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="0dp"
         android:layout_weight="8"
         android:layout_height="40dp"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:text="Laundry"/>
+        android:text="@string/facility_name_placeholder"/>
 
 
 
