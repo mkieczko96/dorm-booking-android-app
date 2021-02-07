@@ -40,8 +40,13 @@ android {
 }
 
 dependencies {
+    // Boilerplate reduction
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    // Communication between objects via Parcelables
+    implementation 'org.parceler:parceler-api:1.1.12'
+    annotationProcessor 'org.parceler:parceler:1.1.12'
 
     // REST Api communication
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

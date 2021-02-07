@@ -21,6 +21,9 @@ public class Booking {
     @Column(name = "end_at", nullable = false)
     private Long endAt;
 
+    @Column(name = "facility_id", insertable = false, updatable = false)
+    private Long facilityId;
+
     @ManyToOne
     @JoinColumn(name = "facility_id", nullable = false)
     @JsonIgnoreProperties("bookings")

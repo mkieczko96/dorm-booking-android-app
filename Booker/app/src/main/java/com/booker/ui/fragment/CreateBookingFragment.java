@@ -45,6 +45,8 @@ public class CreateBookingFragment extends DialogFragment {
     private AlertDialog facilityChooserDialog;
     private TextView selectedFacilityName;
     private ListView notificationList;
+    private Facility selectedFacility;
+    private long userId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,8 +71,10 @@ public class CreateBookingFragment extends DialogFragment {
 
     }
 
-    public static CreateBookingFragment newInstance() {
-        return new CreateBookingFragment();
+    public static CreateBookingFragment newInstance(long userId) {
+        CreateBookingFragment fragment = new CreateBookingFragment();
+        fragment.userId = userId;
+        return fragment;
     }
 
     private void onDateTimeClick(View v) {
@@ -160,9 +164,10 @@ public class CreateBookingFragment extends DialogFragment {
 
     private void onFacilityItemClick(DialogInterface dialog, int index) {
         ListView facilityList = ((AlertDialog) dialog).getListView();
-        String facilityName = ((Facility) facilityList.getAdapter()
-                .getItem(index)).getName();
-        selectedFacilityName.setText(facilityName);
+        Facility facility = ((Facility) facilityList.getAdapter()
+                .getItem(index));
+        selectedFacilityName.setText(facility.getName());
+        this.selectedFacility = facility;
         dialog.dismiss();
     }
 
@@ -172,7 +177,7 @@ public class CreateBookingFragment extends DialogFragment {
 
     public void showDialog() {
         FragmentManager manager = getFragmentManager();
-        DialogFacilityCalendar fragment = DialogFacilityCalendar.newInstance();
+        DialogFacilityCalendar fragment = DialogFacilityCalendar.newInstance(selectedFacility);
         fragment.show(manager, "dialog");
     }
 

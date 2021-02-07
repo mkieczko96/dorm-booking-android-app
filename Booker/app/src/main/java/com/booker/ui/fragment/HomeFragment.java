@@ -61,6 +61,16 @@ public class HomeFragment extends Fragment {
     private HashMap<LocalDate, List<Booking>> bookings = new HashMap<>();
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
@@ -87,7 +97,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void onFabClick(View view) {
-        CreateBookingFragment fragment = CreateBookingFragment.newInstance();
+        CreateBookingFragment fragment = CreateBookingFragment.newInstance(currentUserId);
         Activity activity = getActivity();
 
         assert activity != null;
