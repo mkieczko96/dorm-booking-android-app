@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@drawable/bg_calendar_event_list_item"
-    android:elevation="4dp">
-
-    <View
-        android:layout_width="8dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_calendar_event_list_item_marker" />
+    android:elevation="8dp"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/llBookingDetails"
-        android:layout_width="0dp"
+        android:id="@+id/user_events_list"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_weight="3"
         android:orientation="vertical">
 
         <LinearLayout
@@ -50,26 +43,16 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvBeginAt"
+                android:id="@+id/event_begin_timestamp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2" />
+
+            <TextView
+                android:id="@+id/event_end_timestamp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="@string/booking_begin_date_placeholder" />
-
-            <TextView
-                android:id="@+id/tvDurationLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/booking_duration"
-                android:textAlignment="textEnd" />
-
-            <TextView
-                android:id="@+id/tvDuration"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/booking_duration_placeholder"
                 android:textAlignment="textEnd" />
 
         </LinearLayout>

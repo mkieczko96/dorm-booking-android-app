@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class Booking {
     private String imageURL;
@@ -29,8 +30,8 @@ public class Booking {
     private long beginAt;
 
     @Expose
-    @SerializedName("durationInMinutes")
-    private long duration;
+    @SerializedName("endAt")
+    private long endAt;
 
     @Expose
     @SerializedName("facility")

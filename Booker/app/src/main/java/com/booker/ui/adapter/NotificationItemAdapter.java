@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.booker.R;
-import com.booker.databinding.BookingNotificationItemBinding;
+import com.booker.databinding.ItemNotificationBinding;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
     public NotificationItemAdapter(Context context, String[] notifications) {
         this.context = context;
         this.notifications = new ArrayList<>();
-        for (String i: notifications) {
+        for (String i : notifications) {
             this.notifications.add(new NotificationItem(i));
         }
         this.notificationOptions = context.getResources().getStringArray(R.array.notification_time_options);
@@ -55,12 +55,12 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
 
     @Override
     public View getView(int i, View view, ViewGroup parent) {
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.item_notification, null);
         }
 
-        BookingNotificationItemBinding binding = BookingNotificationItemBinding.bind(view);
+        ItemNotificationBinding binding = ItemNotificationBinding.bind(view);
 
         TextView notificationTime = binding.notificationTime;
         ImageView removeNotification = binding.notificationDelete;
@@ -83,7 +83,7 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
 
         removeNotification.setOnClickListener(notification -> {
             notifications.remove(i);
-            if(notifications.size() < 5) {
+            if (notifications.size() < 5) {
                 ListView lv = (ListView) parent;
                 lv.findViewById(R.id.notification_add).setEnabled(true);
             }

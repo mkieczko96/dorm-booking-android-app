@@ -18,8 +18,8 @@ import java.util.Locale;
 
 public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
 
-    public ArrayList<Booking> list;
-    private Context context;
+    public final ArrayList<Booking> list;
+    private final Context context;
 
     public BookingsItemAdapter(Context context) {
         this.list = new ArrayList<>();
@@ -55,19 +55,20 @@ public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
 
         TextView facility = view.findViewById(R.id.tvFacility);
         TextView bookingId = view.findViewById(R.id.tvBookingId);
-        TextView beginAt = view.findViewById(R.id.tvBeginAt);
-        TextView duration = view.findViewById(R.id.tvDuration);
+        TextView beginAt = view.findViewById(R.id.event_begin_timestamp);
+        TextView endAt = view.findViewById(R.id.event_end_timestamp);
 
         Booking b = list.get(i);
 
         facility.setText(b.getFacility().getName());
         bookingId.setText(String.valueOf(b.getId()));
 
-        Date date = new Date(b.getBeginAt() * 1000);
+        Date beginDate = new Date(b.getBeginAt() * 1000);
+        Date endDate = new Date(b.getEndAt() * 1000);
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH);
 
-        beginAt.setText(sfd.format(date));
-        duration.setText(b.getDuration() / 60.0 + " hours");
+        beginAt.setText(sfd.format(beginDate));
+        endAt.setText(sfd.format(endDate));
 
         return view;
     }

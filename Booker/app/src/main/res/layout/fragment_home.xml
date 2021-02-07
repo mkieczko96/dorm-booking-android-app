@@ -35,10 +35,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="8dp"
             android:nestedScrollingEnabled="true"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="0dp"
-            android:paddingBottom="8dp"
+            android:padding="8dp"
             android:visibility="invisible"
             tools:listitem="@layout/item_user_calendar_event" />
 

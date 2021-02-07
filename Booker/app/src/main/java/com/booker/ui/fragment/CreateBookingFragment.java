@@ -172,7 +172,7 @@ public class CreateBookingFragment extends DialogFragment {
 
     public void showDialog() {
         FragmentManager manager = getFragmentManager();
-        FacilityCalendarDialogFragment fragment = FacilityCalendarDialogFragment.newInstance();
+        DialogFacilityCalendar fragment = DialogFacilityCalendar.newInstance();
         fragment.show(manager, "dialog");
     }
 
