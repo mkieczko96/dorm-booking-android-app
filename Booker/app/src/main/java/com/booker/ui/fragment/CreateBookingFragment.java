@@ -1,15 +1,14 @@
 package com.booker.ui.fragment;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,14 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.booker.R;
+import com.booker.api.ApiClient;
+import com.booker.data.models.Facility;
 import com.booker.databinding.BookingNotificationFooterBinding;
 import com.booker.databinding.FragmentNewBookingBinding;
-import com.booker.ui.adapter.FacilityDialogItem;
 import com.booker.ui.adapter.FacilityDialogItemAdapter;
 import com.booker.ui.adapter.NotificationItem;
 import com.booker.ui.adapter.NotificationItemAdapter;
@@ -32,9 +30,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.NoArgsConstructor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @NoArgsConstructor
 public class NewBookingFragment extends DialogFragment {
@@ -50,7 +53,7 @@ public class NewBookingFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_new_booking, container, false);
+        return inflater.inflate(R.layout.fragment_create_booking, container, false);
     }
 
     @Override
@@ -61,14 +64,21 @@ public class NewBookingFragment extends DialogFragment {
         selectedFacilityName = binding.newBookingFacility;
         notificationList = binding.bookingNotifications;
 
-        setFacilityChooserDialog();
+        //setFacilityChooserDialog();
+        getFacilityDialogArrayList();
         setNotificationListWithDefaultValue();
 
         selectedFacilityName.setOnClickListener(this::onFacilityNameClick);
+
+        binding.beginDate.setOnClickListener(this::onDateTimeClick);
+
     }
 
-    private void setFacilityChooserDialog() {
-        ArrayList<FacilityDialogItem> items = getFacilityDialogArrayList();
+    private void onDateTimeClick(View v) {
+        showDialog();
+    }
+
+    private void setFacilityChooserDialog(ArrayList<Facility> items) {
         Context context = getContext();
 
         assert context != null;
@@ -111,21 +121,47 @@ public class NewBookingFragment extends DialogFragment {
         return items;
     }
 
-    // TODO: Load data from REST API
-    private ArrayList<FacilityDialogItem> getFacilityDialogArrayList() {
+    private String getToken() {
+        Activity activity = getActivity();
 
+        assert activity != null;
+        return activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
+                .getString("dorm.booker.jwt", null);
+    }
 
+    private void getFacilityDialogArrayList() {
+        String token = "Bearer " + getToken();
+        Call<List<Facility>> call = ApiClient.getFacilityService()
+                .findAllFacilities(token);
 
-        ArrayList<FacilityDialogItem> items = new ArrayList<>();
-        items.add(new FacilityDialogItem(R.drawable.ic_laundry_light_button, "Laundry"));
-        items.add(new FacilityDialogItem(R.drawable.ic_gym_light_button, "Gym"));
-        items.add(new FacilityDialogItem(R.drawable.ic_tv_light_button, "TV room"));
-        return items;
+        call.enqueue(new Callback<List<Facility>>() {
+            @Override
+            public void onResponse(Call<List<Facility>> call, Response<List<Facility>> response) {
+
+                if (response.isSuccessful()) {
+                    ArrayList<Facility> items = (ArrayList<Facility>) response.body();
+                    items.removeIf(f -> f.getName().startsWith("Laundry") && f.getFloor() != 1);
+                    setFacilityChooserDialog(items);
+                } else {
+                    try {
+                        Log.e("DEB", response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Facility>> call, Throwable t) {
+                Log.e("DEB", t.getLocalizedMessage());
+            }
+        });
     }
 
     private void onFacilityItemClick(DialogInterface dialog, int index) {
         ListView facilityList = ((AlertDialog) dialog).getListView();
-        String facilityName = ((FacilityDialogItem) facilityList.getAdapter()
+        String facilityName = ((Facility) facilityList.getAdapter()
                 .getItem(index)).getName();
         selectedFacilityName.setText(facilityName);
         dialog.dismiss();
@@ -138,14 +174,14 @@ public class NewBookingFragment extends DialogFragment {
     // TODO: Move to MainActivity
     public void showDialog() {
         FragmentManager manager = getFragmentManager();
-        NewBookingFragment fragment = NewBookingFragment.newInstance();
-
-        assert manager != null;
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.add(android.R.id.content, fragment)
-                .addToBackStack(fragment.getClass().getSimpleName())
-                .commit();
+        FacilityCalendarDialogFragment fragment = FacilityCalendarDialogFragment.newInstance();
+        fragment.show(manager, "dialog");
+//        assert manager != null;
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        transaction.add(android.R.id.content, fragment)
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
     }
 
 }

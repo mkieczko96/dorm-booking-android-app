@@ -1,9 +1,9 @@
 package com.booker.api;
 
 import com.booker.api.service.BookingService;
+import com.booker.api.service.FacilityService;
 import com.booker.api.service.LoginService;
 import com.booker.api.service.UserService;
-import com.booker.data.models.Booking;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +39,10 @@ public class ApiClient {
 
     public static BookingService getBookingsService() {
         return getRetrofit().create(BookingService.class);
+    }
+
+    public static FacilityService getFacilityService() {
+        return getRetrofit().create(FacilityService.class);
     }
 
     public static UserService getUserService() {
