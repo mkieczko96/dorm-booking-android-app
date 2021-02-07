@@ -26,7 +26,4 @@ public class Facility {
 
     @Column(name = "default_duration", nullable = false)
     private Long defaultBookingDuration;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 }

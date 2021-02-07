@@ -1,6 +1,6 @@
 package com.booker.ui.adapter;
 
-import android.graphics.Bitmap;
+import com.booker.data.models.Facility;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FacilityDialogItem {
-    private Bitmap image;
-    private String name;
+    private Facility facility;
 }

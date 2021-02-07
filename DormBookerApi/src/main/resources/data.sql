@@ -415,16 +415,16 @@ INSERT [users] (created_on, email_address, expires_on, first_name, enabled, last
 CREATE INDEX users_email_index
 ON [users](email_address);
 
-INSERT INTO [facilities] (admin_id, default_duration, floor, name, image_url) VALUES
-(13, 120, 1, 'Laundry Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/laundry.jpg'),
-(115, 120, 2, 'Laundry Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/laundry.jpg'),
-(217, 120, 3, 'Laundry Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/laundry.jpg'),
-(319, 120, 4, 'Laundry Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/laundry.jpg'),
-(119, 30, -1, 'Gym', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/gym.jpg'),
-(27, 30, 1, 'Ping-Pong Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/ping-pong.jpg'),
-(119, 30, 2, 'TV Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/tv.jpg'),
-(212, 30, 3, 'Fitness Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/fitness.jpg'),
-(328, 30, 4, 'Billiard Room', 'https://github.com/mkieczko96/dorm-booking-android-app/blob/develop/Resources/img/pool.jpg');
+INSERT INTO [facilities] (admin_id, default_duration, floor, name) VALUES
+(13, 120, 1, 'Laundry Room'),
+(115, 120, 2, 'Laundry Room'),
+(217, 120, 3, 'Laundry Room'),
+(319, 120, 4, 'Laundry Room'),
+(119, 30, -1, 'Gym'),
+(27, 30, 1, 'Ping-Pong Room'),
+(119, 30, 2, 'TV Room'),
+(212, 30, 3, 'Fitness Room'),
+(328, 30, 4, 'Billiard Room');
 
 INSERT INTO [bookings] (begin_at, end_at, facility_id, user_id) VALUES
 (1624973400, 1624977000, 6, 412),
