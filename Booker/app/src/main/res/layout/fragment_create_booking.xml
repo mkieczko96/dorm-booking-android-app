@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.NewBookingFragment">
+    tools:context=".ui.fragment.CreateBookingFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.appbar.AppBarLayout
@@ -216,8 +216,8 @@
                     android:id="@+id/booking_notifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listfooter="@layout/booking_notification_footer"
-                    tools:listitem="@layout/booking_notification_item" />
+                    tools:listfooter="@layout/view_notification_list_footer"
+                    tools:listitem="@layout/item_notification" />
             </LinearLayout>
         </LinearLayout>
 

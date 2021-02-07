@@ -82,5 +82,6 @@
     <string name="label_fitness">Fitness</string>
     <string name="label_pool">Pool</string>
     <string name="fab_description">Add new booking - floating action button</string>
+    <string name="text_facility">Facility</string>
 
 </resources>

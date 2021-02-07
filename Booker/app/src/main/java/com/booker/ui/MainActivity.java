@@ -3,7 +3,6 @@ package com.booker.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -73,6 +72,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            binding.navDrawer.setCheckedItem(R.id.btn_nav_home);
+            getSupportFragmentManager().popBackStack();
+        } else {
+            startLoginActivity();
+        }
+    }
+
     private void setDefaultFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_placeholder,
@@ -99,29 +108,9 @@ public class MainActivity extends AppCompatActivity {
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
                 loadHomeFragment();
                 return true;
-            case R.id.btn_nav_calendar:
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
-                loadCalendarFragment();
-                return true;
-            case R.id.btn_nav_settings:
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
-                loadSettingsFragment();
-                return true;
-            case R.id.btn_nav_sign_out:
-                revokeToken();
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
-                startLoginActivity();
-                return true;
             default:
                 return false;
         }
-    }
-
-    private void loadSettingsFragment() {
-    }
-
-    private void loadCalendarFragment() {
-
     }
 
     private void loadHomeFragment() {
@@ -146,15 +135,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            binding.navDrawer.setCheckedItem(R.id.btn_nav_home);
-            getSupportFragmentManager().popBackStack();
-        } else {
-            startLoginActivity();
-        }
     }
 }

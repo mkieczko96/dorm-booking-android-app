@@ -19,11 +19,11 @@
             android:background="@color/design_default_color_primary"
             android:clickable="true"
             android:focusable="true"
-            app:cv_dayViewResource="@layout/calendar_day_layout"
+            app:cv_dayViewResource="@layout/view_calendar_day"
             app:cv_hasBoundaries="true"
             app:cv_inDateStyle="none"
             app:cv_maxRowCount="1"
-            app:cv_monthHeaderResource="@layout/calendar_month_layout"
+            app:cv_monthHeaderResource="@layout/view_calendar_month"
             app:cv_orientation="horizontal"
             app:cv_outDateStyle="none"
             app:cv_scrollMode="continuous" />
@@ -40,7 +40,7 @@
             android:paddingEnd="0dp"
             android:paddingBottom="8dp"
             android:visibility="invisible"
-            tools:listitem="@layout/calendar_event_list_item" />
+            tools:listitem="@layout/item_user_calendar_event" />
 
     </LinearLayout>
 

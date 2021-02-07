@@ -18,9 +18,9 @@ import androidx.fragment.app.Fragment;
 import com.booker.R;
 import com.booker.api.ApiClient;
 import com.booker.data.models.Booking;
-import com.booker.databinding.CalendarDayLayoutBinding;
-import com.booker.databinding.CalendarMonthLayoutBinding;
 import com.booker.databinding.FragmentHomeBinding;
+import com.booker.databinding.ViewCalendarDayBinding;
+import com.booker.databinding.ViewCalendarMonthBinding;
 import com.booker.ui.adapter.BookingsItemAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kizitonwose.calendarview.CalendarView;
@@ -55,18 +55,10 @@ public class HomeFragment extends Fragment {
     private final LocalDate today = LocalDate.now();
     private FragmentHomeBinding binding;
     private CalendarView calendarView;
-    private ListView calendarEventsView;
-    private FloatingActionButton fab;
     private long currentUserId;
     private LocalDate selectedDate = null;
     private BookingsItemAdapter adapter;
     private HashMap<LocalDate, List<Booking>> bookings = new HashMap<>();
-
-    public static HomeFragment newInstance(long userId) {
-        HomeFragment newFragment = new HomeFragment();
-        newFragment.currentUserId = userId;
-        return newFragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,23 +69,25 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding = FragmentHomeBinding.bind(view);
         calendarView = binding.calendarView;
-        calendarEventsView = binding.eventList;
-        fab = binding.fabCreateBooking;
-
+        ListView calendarEventsView = binding.eventList;
+        FloatingActionButton fab = binding.fabCreateBooking;
         getUserBookings();
         adapter = new BookingsItemAdapter(getContext());
         calendarEventsView.setAdapter(adapter);
-
         setCalendarView(calendarView);
-
         fab.setOnClickListener(this::onFabClick);
     }
 
+    public static HomeFragment newInstance(long userId) {
+        HomeFragment newFragment = new HomeFragment();
+        newFragment.currentUserId = userId;
+        return newFragment;
+    }
+
     private void onFabClick(View view) {
-        NewBookingFragment fragment = NewBookingFragment.newInstance();
+        CreateBookingFragment fragment = CreateBookingFragment.newInstance();
         Activity activity = getActivity();
 
         assert activity != null;
@@ -186,12 +180,12 @@ public class HomeFragment extends Fragment {
     }
 
     class DayViewContainer extends ViewContainer {
-        final CalendarDayLayoutBinding binding;
+        final ViewCalendarDayBinding binding;
         CalendarDay day;
 
         public DayViewContainer(@NotNull View view) {
             super(view);
-            binding = CalendarDayLayoutBinding.bind(view);
+            binding = ViewCalendarDayBinding.bind(view);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -203,12 +197,6 @@ public class HomeFragment extends Fragment {
     }
 
     class DayViewBinder implements DayBinder<DayViewContainer> {
-        @NotNull
-        @Override
-        public DayViewContainer create(@NotNull View view) {
-            return new DayViewContainer(view);
-        }
-
         @Override
         public void bind(@NotNull DayViewContainer container, @NotNull CalendarDay day) {
             container.day = day;
@@ -234,15 +222,21 @@ public class HomeFragment extends Fragment {
                 eventMarker.setVisibility(bookings.containsKey(day.getDate()) ? View.VISIBLE : View.INVISIBLE);
             }
         }
+
+        @NotNull
+        @Override
+        public DayViewContainer create(@NotNull View view) {
+            return new DayViewContainer(view);
+        }
     }
 
     class MonthViewContainer extends ViewContainer {
 
-        CalendarMonthLayoutBinding binding;
+        ViewCalendarMonthBinding binding;
 
         public MonthViewContainer(@NotNull View view) {
             super(view);
-            binding = CalendarMonthLayoutBinding.bind(view);
+            binding = ViewCalendarMonthBinding.bind(view);
 
         }
     }

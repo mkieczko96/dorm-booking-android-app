@@ -57,7 +57,7 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
     public View getView(int i, View view, ViewGroup parent) {
         if(view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.booking_notification_item, null);
+            view = inflater.inflate(R.layout.item_notification, null);
         }
 
         BookingNotificationItemBinding binding = BookingNotificationItemBinding.bind(view);

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +35,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.btnSignIn.setOnClickListener(view -> authenticate());
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void validate() {
@@ -78,12 +82,13 @@ public class LoginActivity extends AppCompatActivity {
                 R.style.Theme_AppCompat_Light_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         String username = binding.etUsername.getText().toString();
         String password = binding.etPassword.getText().toString();
 
-        String httpBasic = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP );
+        String httpBasic = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 
         Call<Map<Object, Object>> authCall = ApiClient.getLoginService().authenticate(httpBasic);
         authCall.enqueue(new Callback<Map<Object, Object>>() {
@@ -99,37 +104,36 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Map<Object, Object>> call, Throwable t) {
-                Snackbar.make(binding.getRoot(), t.getMessage(), BaseTransientBottomBar.LENGTH_LONG);
+                Snackbar.make(binding.getRoot(),
+                        t.getMessage(),
+                        BaseTransientBottomBar.LENGTH_LONG)
+                        .show();
                 binding.btnSignIn.setEnabled(true);
             }
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        // Disable going back to the MainActivity
-        moveTaskToBack(true);
-    }
-
     private void onAuthenticationSuccess(Response<Map<Object, Object>> user) {
         binding.btnSignIn.setEnabled(true);
-
         new Handler().postDelayed(() -> {
-            SharedPreferences sp = getSharedPreferences(getString(R.string.pref_file), MODE_PRIVATE);
-            SharedPreferences.Editor edit = sp.edit();
-
-            String token = user.body().get("token").toString();
-            edit.putString("dorm.booker.jwt", token);
-            edit.apply();
-
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class).putExtra("jwt", token);
-            startActivity(intent);
+            saveToken(user.body().get("token").toString());
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }, 700);
         finish();
     }
 
+    private void saveToken(String token) {
+        SharedPreferences sp = getSharedPreferences(getString(R.string.pref_file), MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("dorm.booker.jwt", token);
+        edit.apply();
+    }
+
     private void onAuthenticationFailed() {
-        Snackbar.make(binding.getRoot(), R.string.login_failed, BaseTransientBottomBar.LENGTH_LONG).show();
+        Snackbar.make(binding.getRoot(),
+                R.string.login_failed,
+                BaseTransientBottomBar.LENGTH_LONG)
+                .show();
         binding.btnSignIn.setEnabled(true);
     }
 }

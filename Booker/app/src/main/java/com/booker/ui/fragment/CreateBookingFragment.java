@@ -21,8 +21,8 @@ import androidx.fragment.app.FragmentManager;
 import com.booker.R;
 import com.booker.api.ApiClient;
 import com.booker.data.models.Facility;
-import com.booker.databinding.BookingNotificationFooterBinding;
-import com.booker.databinding.FragmentNewBookingBinding;
+import com.booker.databinding.FragmentCreateBookingBinding;
+import com.booker.databinding.ViewNotificationListFooterBinding;
 import com.booker.ui.adapter.FacilityDialogItemAdapter;
 import com.booker.ui.adapter.NotificationItem;
 import com.booker.ui.adapter.NotificationItemAdapter;
@@ -40,17 +40,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @NoArgsConstructor
-public class NewBookingFragment extends DialogFragment {
+public class CreateBookingFragment extends DialogFragment {
 
     private AlertDialog facilityChooserDialog;
     private TextView selectedFacilityName;
     private ListView notificationList;
 
-    public static NewBookingFragment newInstance() {
-        return new NewBookingFragment();
-    }
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_booking, container, false);
@@ -60,7 +55,7 @@ public class NewBookingFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FragmentNewBookingBinding binding = FragmentNewBookingBinding.bind(view);
+        FragmentCreateBookingBinding binding = FragmentCreateBookingBinding.bind(view);
         selectedFacilityName = binding.newBookingFacility;
         notificationList = binding.bookingNotifications;
 
@@ -72,6 +67,10 @@ public class NewBookingFragment extends DialogFragment {
 
         binding.beginDate.setOnClickListener(this::onDateTimeClick);
 
+    }
+
+    public static CreateBookingFragment newInstance() {
+        return new CreateBookingFragment();
     }
 
     private void onDateTimeClick(View v) {
@@ -96,7 +95,7 @@ public class NewBookingFragment extends DialogFragment {
         assert context != null;
         NotificationItemAdapter adapter = new NotificationItemAdapter(context, items);
 
-        BookingNotificationFooterBinding binding = BookingNotificationFooterBinding.inflate(getLayoutInflater());
+        ViewNotificationListFooterBinding binding = ViewNotificationListFooterBinding.inflate(getLayoutInflater());
         Button addNotification = binding.notificationAdd;
         addNotification.setOnClickListener(onAddNotificationButtonClick(items, adapter));
         notificationList.addFooterView(binding.getRoot());
@@ -171,17 +170,10 @@ public class NewBookingFragment extends DialogFragment {
         facilityChooserDialog.show();
     }
 
-    // TODO: Move to MainActivity
     public void showDialog() {
         FragmentManager manager = getFragmentManager();
         FacilityCalendarDialogFragment fragment = FacilityCalendarDialogFragment.newInstance();
         fragment.show(manager, "dialog");
-//        assert manager != null;
-//        FragmentTransaction transaction = manager.beginTransaction();
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        transaction.add(android.R.id.content, fragment)
-//                .addToBackStack(fragment.getClass().getSimpleName())
-//                .commit();
     }
 
 }

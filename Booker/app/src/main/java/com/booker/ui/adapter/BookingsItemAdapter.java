@@ -50,7 +50,7 @@ public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.calendar_event_list_item, null);
+            view = inflater.inflate(R.layout.item_user_calendar_event, null);
         }
 
         TextView facility = view.findViewById(R.id.tvFacility);
