@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,17 +24,24 @@ import androidx.fragment.app.FragmentManager;
 
 import com.booker.R;
 import com.booker.api.ApiClient;
+import com.booker.data.models.Booking;
 import com.booker.data.models.Facility;
+import com.booker.data.models.User;
 import com.booker.databinding.FragmentCreateBookingBinding;
 import com.booker.databinding.ViewNotificationListFooterBinding;
+import com.booker.ui.BookingDates;
 import com.booker.ui.adapter.FacilityDialogItemAdapter;
 import com.booker.ui.adapter.NotificationItem;
 import com.booker.ui.adapter.NotificationItemAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +56,24 @@ public class CreateBookingFragment extends DialogFragment {
     private AlertDialog facilityChooserDialog;
     private TextView selectedFacilityName;
     private ListView notificationList;
-    private Facility selectedFacility;
-    private long userId;
+    private Facility mSelectedFacility;
+    private User mUser;
+    private FragmentCreateBookingBinding mBinding;
+    private LocalDate mSelectedDate;
+    private BookingDates mBookingDates;
+    private ActionMode mActionMode;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,24 +84,36 @@ public class CreateBookingFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FragmentCreateBookingBinding binding = FragmentCreateBookingBinding.bind(view);
-        selectedFacilityName = binding.newBookingFacility;
-        notificationList = binding.bookingNotifications;
+        ActionMode.Callback actionMode = new CreateBookingActionMode();
+        mActionMode = getActivity().startActionMode(actionMode);
 
-        //setFacilityChooserDialog();
+        mBinding = FragmentCreateBookingBinding.bind(view);
+        selectedFacilityName = mBinding.newBookingFacility;
+        notificationList = mBinding.bookingNotifications;
+
         getFacilityDialogArrayList();
         setNotificationListWithDefaultValue();
 
         selectedFacilityName.setOnClickListener(this::onFacilityNameClick);
 
-        binding.beginDate.setOnClickListener(this::onDateTimeClick);
+        mBinding.beginDate.setOnClickListener(this::onDateTimeClick);
 
     }
 
-    public static CreateBookingFragment newInstance(long userId) {
+    public static CreateBookingFragment newInstance(User user, LocalDate date) {
         CreateBookingFragment fragment = new CreateBookingFragment();
-        fragment.userId = userId;
+        fragment.mUser = user;
+        fragment.mSelectedDate = date;
         return fragment;
+    }
+
+    @Subscribe
+    public void onDateSelected(BookingDates dates) {
+        mBookingDates = dates;
+        mBinding.beginDate.setText(dates.getBeginAt().toLocalDate().toString());
+        mBinding.beginTime.setText(dates.getBeginAt().toLocalTime().toString());
+        mBinding.endDate.setText(dates.getEndAt().toLocalDate().toString());
+        mBinding.endTime.setText(dates.getEndAt().toLocalTime().toString());
     }
 
     private void onDateTimeClick(View v) {
@@ -124,16 +163,16 @@ public class CreateBookingFragment extends DialogFragment {
         return items;
     }
 
-    private String getToken() {
+    private String getBearerToken() {
         Activity activity = getActivity();
 
         assert activity != null;
-        return activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
+        return "Bearer " + activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
                 .getString("dorm.booker.jwt", null);
     }
 
     private void getFacilityDialogArrayList() {
-        String token = "Bearer " + getToken();
+        String token = getBearerToken();
         Call<List<Facility>> call = ApiClient.getFacilityService()
                 .findAllFacilities(token);
 
@@ -144,6 +183,8 @@ public class CreateBookingFragment extends DialogFragment {
                 if (response.isSuccessful()) {
                     ArrayList<Facility> items = (ArrayList<Facility>) response.body();
                     items.removeIf(f -> f.getName().startsWith("Laundry") && f.getFloor() != 1);
+                    mSelectedFacility = items.get(0);
+                    mBinding.newBookingFacility.setText(mSelectedFacility.getName());
                     setFacilityChooserDialog(items);
                 } else {
                     try {
@@ -167,7 +208,7 @@ public class CreateBookingFragment extends DialogFragment {
         Facility facility = ((Facility) facilityList.getAdapter()
                 .getItem(index));
         selectedFacilityName.setText(facility.getName());
-        this.selectedFacility = facility;
+        this.mSelectedFacility = facility;
         dialog.dismiss();
     }
 
@@ -177,8 +218,68 @@ public class CreateBookingFragment extends DialogFragment {
 
     public void showDialog() {
         FragmentManager manager = getFragmentManager();
-        DialogFacilityCalendar fragment = DialogFacilityCalendar.newInstance(selectedFacility);
+        DialogFacilityCalendar fragment = DialogFacilityCalendar.newInstance(mUser, mSelectedFacility, mSelectedDate);
         fragment.show(manager, "dialog");
+    }
+
+    private void saveBooking() {
+        Booking booking = new Booking();
+        booking.setUserId(mUser.getId());
+        booking.setUser(mUser);
+        booking.setFacilityId(mSelectedFacility.getId());
+        booking.setFacility(mSelectedFacility);
+        booking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
+        booking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
+
+        Call<Booking> call = ApiClient.getBookingsService().saveBooking(getBearerToken(), booking);
+        call.enqueue(new CreateBookingCallback());
+    }
+
+    class CreateBookingCallback implements Callback<Booking> {
+
+        @Override
+        public void onResponse(Call<Booking> call, Response<Booking> response) {
+            if(response.isSuccessful()) {
+                Booking savedBooking = response.body();
+                EventBus.getDefault().post(savedBooking);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Booking> call, Throwable t) {
+            Log.e("POST", t.getLocalizedMessage());
+        }
+    }
+
+    class CreateBookingActionMode implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_create_booking, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.save) {
+                saveBooking();
+                mode.finish();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            getFragmentManager().popBackStackImmediate();
+            mActionMode = null;
+        }
     }
 
 }

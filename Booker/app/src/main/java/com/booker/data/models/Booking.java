@@ -36,4 +36,6 @@ public class Booking {
     @Expose
     @SerializedName("facility")
     private Facility facility;
+
+    private User user;
 }

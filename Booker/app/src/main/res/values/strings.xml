@@ -53,11 +53,11 @@
 
     <string name="iv_drawer_background">Profile background</string>
     <string name="action_sign_out">Sign Out</string>
-    <string name="action_home">Home</string>
+    <string name="title_my_bookings">My Bookings</string>
     <string name="action_calendar">My Reservations</string>
     <string name="action_settings">Settings</string>
     <string name="nav_header_username">Jane Doe</string>
-    <string name="nav_header_room">Room %1$d</string>
+    <string name="msg_room">Room %1$d</string>
     <string name="nav_header_description">Abstract header background</string>
     <string name="open_nav_drawer">Navigation Drawer Open</string>
     <string name="close_nav_drawer">Navigation Drawer Close</string>
@@ -83,5 +83,8 @@
     <string name="label_pool">Pool</string>
     <string name="fab_description">Add new booking - floating action button</string>
     <string name="text_facility">Facility</string>
+    <string name="msg_previous_day">Previous day</string>
+    <string name="msg_next_day">Next day</string>
+    <string name="title_save">Save</string>
 
 </resources>

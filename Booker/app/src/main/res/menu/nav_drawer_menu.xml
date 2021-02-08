@@ -7,15 +7,9 @@
         <item
             android:id="@+id/btn_nav_home"
             android:icon="@drawable/ic_home_24dp"
-            android:contentDescription="@string/action_home"
-            android:title="@string/action_home"
+            android:contentDescription="@string/title_my_bookings"
+            android:title="@string/title_my_bookings"
             android:checked="true"/>
-        <item
-            android:id="@+id/btn_nav_calendar"
-            android:icon="@drawable/ic_calendar_24dp"
-            android:contentDescription="@string/action_calendar"
-            android:title="@string/action_calendar"
-            android:checked="false"/>
         <item
             android:id="@+id/btn_nav_settings"
             android:icon="@drawable/ic_settings_24dp"

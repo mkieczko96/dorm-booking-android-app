@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
                     TextView username = view.findViewById(R.id.app_current_username);
                     username.setText(currentUser.getDisplayName());
 
-                    setDefaultFragment(HomeFragment.newInstance(currentUser.getId()));
+                    setDefaultFragment(HomeFragment.newInstance(currentUser));
 
                     TextView room = view.findViewById(R.id.app_current_room);
-                    room.setText(getString(R.string.nav_header_room, currentUser.getRoom()));
+                    room.setText(getString(R.string.msg_room, currentUser.getRoom()));
                 }
             }
 
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadHomeFragment() {
-        HomeFragment fragment = HomeFragment.newInstance(currentUser.getId());
+        HomeFragment fragment = HomeFragment.newInstance(currentUser);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 binding.fragmentPlaceholder.getId(),

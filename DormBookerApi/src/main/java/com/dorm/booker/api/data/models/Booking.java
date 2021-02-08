@@ -12,7 +12,7 @@ public class Booking {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
     @Column(name = "begin_at", nullable = false)
@@ -23,6 +23,15 @@ public class Booking {
 
     @Column(name = "facility_id", insertable = false, updatable = false)
     private Long facilityId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({
+            "roles",
+            "password"
+    })
+    private User user;
+
 
     @ManyToOne
     @JoinColumn(name = "facility_id", nullable = false)

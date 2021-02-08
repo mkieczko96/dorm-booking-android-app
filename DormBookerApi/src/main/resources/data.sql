@@ -420,11 +420,11 @@ INSERT INTO [facilities] (admin_id, default_duration, floor, name) VALUES
 (115, 120, 2, 'Laundry Room'),
 (217, 120, 3, 'Laundry Room'),
 (319, 120, 4, 'Laundry Room'),
-(119, 30, -1, 'Gym'),
-(27, 30, 1, 'Ping-Pong Room'),
-(119, 30, 2, 'TV Room'),
-(212, 30, 3, 'Fitness Room'),
-(328, 30, 4, 'Billiard Room');
+(119, 60, -1, 'Gym'),
+(27, 60, 1, 'Ping-Pong Room'),
+(119, 60, 2, 'TV Room'),
+(212, 60, 3, 'Fitness Room'),
+(328, 60, 4, 'Billiard Room');
 
 INSERT INTO [bookings] (begin_at, end_at, facility_id, user_id) VALUES
 (1624973400, 1624977000, 6, 412),

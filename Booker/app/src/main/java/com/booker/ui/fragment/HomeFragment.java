@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.booker.R;
 import com.booker.api.ApiClient;
 import com.booker.data.models.Booking;
+import com.booker.data.models.User;
 import com.booker.databinding.FragmentHomeBinding;
 import com.booker.databinding.ViewCalendarDayBinding;
 import com.booker.databinding.ViewCalendarMonthBinding;
@@ -30,6 +31,8 @@ import com.kizitonwose.calendarview.ui.DayBinder;
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder;
 import com.kizitonwose.calendarview.ui.ViewContainer;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.DayOfWeek;
@@ -55,20 +58,10 @@ public class HomeFragment extends Fragment {
     private final LocalDate today = LocalDate.now();
     private FragmentHomeBinding binding;
     private CalendarView calendarView;
-    private long currentUserId;
-    private LocalDate selectedDate = null;
+    private User mUser;
+    private LocalDate mSelectedDate = null;
     private BookingsItemAdapter adapter;
     private HashMap<LocalDate, List<Booking>> bookings = new HashMap<>();
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +76,7 @@ public class HomeFragment extends Fragment {
         calendarView = binding.calendarView;
         ListView calendarEventsView = binding.eventList;
         FloatingActionButton fab = binding.fabCreateBooking;
+        bookings.clear();
         getUserBookings();
         adapter = new BookingsItemAdapter(getContext());
         calendarEventsView.setAdapter(adapter);
@@ -90,14 +84,30 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(this::onFabClick);
     }
 
-    public static HomeFragment newInstance(long userId) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public static HomeFragment newInstance(User user) {
         HomeFragment newFragment = new HomeFragment();
-        newFragment.currentUserId = userId;
+        newFragment.mUser = user;
         return newFragment;
     }
 
+    @Subscribe
+    public void onBookingCreated(Booking newBooking) {
+    }
+
     private void onFabClick(View view) {
-        CreateBookingFragment fragment = CreateBookingFragment.newInstance(currentUserId);
+        CreateBookingFragment fragment = CreateBookingFragment.newInstance(mUser, mSelectedDate);
         Activity activity = getActivity();
 
         assert activity != null;
@@ -135,7 +145,7 @@ public class HomeFragment extends Fragment {
 
         Call<List<Booking>> call = ApiClient
                 .getBookingsService()
-                .findBookingsByUserId(bearer, currentUserId);
+                .findBookingsByUserId(bearer, mUser.getId());
 
         call.enqueue(new Callback<List<Booking>>() {
             @Override
@@ -150,7 +160,7 @@ public class HomeFragment extends Fragment {
                         bookings.computeIfAbsent(localDate, k -> new ArrayList<>()).add(b);
                     });
                     calendarView.notifyCalendarChanged();
-                    setSelectedDate(today);
+                    setMSelectedDate(today);
                 } else {
                     Log.e("BOOK", response.errorBody().toString());
                 }
@@ -164,11 +174,11 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void setSelectedDate(LocalDate date) {
-        if (selectedDate != date) {
-            if (selectedDate != null) binding.calendarView.notifyDateChanged(selectedDate);
+    private void setMSelectedDate(LocalDate date) {
+        if (mSelectedDate != date) {
+            if (mSelectedDate != null) binding.calendarView.notifyDateChanged(mSelectedDate);
             binding.calendarView.notifyDateChanged((date));
-            selectedDate = date;
+            mSelectedDate = date;
             calendarView.smoothScrollToDate(date.minusDays(3));
             updateAdapter(date);
         }
@@ -200,7 +210,7 @@ public class HomeFragment extends Fragment {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setSelectedDate(day.getDate());
+                    setMSelectedDate(day.getDate());
                 }
             });
         }
@@ -224,7 +234,7 @@ public class HomeFragment extends Fragment {
                 eventMarker.setVisibility(View.INVISIBLE);
             }
 
-            if (day.getDate().equals(selectedDate)) {
+            if (day.getDate().equals(mSelectedDate)) {
                 selectedMarker.setVisibility(View.VISIBLE);
                 eventMarker.setVisibility(View.INVISIBLE);
             } else {
