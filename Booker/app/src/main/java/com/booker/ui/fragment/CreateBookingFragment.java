@@ -85,7 +85,7 @@ public class CreateBookingFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ActionMode.Callback actionMode = new CreateBookingActionMode();
-        mActionMode = getActivity().startActionMode(actionMode);
+        mActionMode = requireActivity().startActionMode(actionMode);
 
         mBinding = FragmentCreateBookingBinding.bind(view);
         selectedFacilityName = mBinding.newBookingFacility;
@@ -96,8 +96,10 @@ public class CreateBookingFragment extends DialogFragment {
 
         selectedFacilityName.setOnClickListener(this::onFacilityNameClick);
 
+        mBinding.endDate.setText(mSelectedDate.toString());
+        mBinding.endDate.setOnClickListener(this::onDateTimeClick);
+        mBinding.beginDate.setText(mSelectedDate.toString());
         mBinding.beginDate.setOnClickListener(this::onDateTimeClick);
-
     }
 
     public static CreateBookingFragment newInstance(User user, LocalDate date) {

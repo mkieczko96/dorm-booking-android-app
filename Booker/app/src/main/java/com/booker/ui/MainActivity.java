@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -29,20 +30,21 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-    private User currentUser = null;
+    private ActivityMainBinding mBinding;
+    private HomeFragment mHomeFragment;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        setSupportActionBar(binding.appBar);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+        setSupportActionBar(mBinding.appBar);
 
         ActionBarDrawerToggle drawerToggle = getDrawerToggle();
-        binding.drawerLayout.addDrawerListener(drawerToggle);
+        mBinding.drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        binding.navDrawer.setNavigationItemSelectedListener(this::menuItemClicked);
+        mBinding.navDrawer.setNavigationItemSelectedListener(this::menuItemClicked);
 
         SharedPreferences sp = getSharedPreferences(getString(R.string.pref_file), MODE_PRIVATE);
 
@@ -52,30 +54,45 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    currentUser = response.body();
+                    mUser = response.body();
 
-                    View view = binding.navDrawer.getHeaderView(0);
+                    View view = mBinding.navDrawer.getHeaderView(0);
                     TextView username = view.findViewById(R.id.app_current_username);
-                    username.setText(currentUser.getDisplayName());
+                    username.setText(mUser.getDisplayName());
 
-                    setDefaultFragment(HomeFragment.newInstance(currentUser));
+                    if (savedInstanceState != null)
+                        mHomeFragment = (HomeFragment) getSupportFragmentManager().getFragment(savedInstanceState, "homeFragment");
+                    else
+                        mHomeFragment = HomeFragment.newInstance(mUser);
+
+                    setDefaultFragment(mHomeFragment);
 
                     TextView room = view.findViewById(R.id.app_current_room);
-                    room.setText(getString(R.string.msg_room, currentUser.getRoom()));
+                    room.setText(getString(R.string.msg_room, mUser.getRoom()));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Snackbar.make(binding.getRoot(), t.getMessage(), BaseTransientBottomBar.LENGTH_LONG);
+                Snackbar.make(mBinding.getRoot(), t.getMessage(), BaseTransientBottomBar.LENGTH_LONG);
             }
         });
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(
+                outState,
+                "homeFragment",
+                mHomeFragment
+        );
+    }
+
+    @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            binding.navDrawer.setCheckedItem(R.id.btn_nav_home);
+            mBinding.navDrawer.setCheckedItem(R.id.btn_nav_home);
             getSupportFragmentManager().popBackStack();
         } else {
             startLoginActivity();
@@ -87,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment_placeholder,
                 fragment,
                 fragment.getClass().getSimpleName())
-                .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 
@@ -95,43 +111,39 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle getDrawerToggle() {
         return new ActionBarDrawerToggle(
                 MainActivity.this,
-                binding.drawerLayout,
-                binding.appBar,
+                mBinding.drawerLayout,
+                mBinding.appBar,
                 R.string.open_nav_drawer,
                 R.string.close_nav_drawer
         );
     }
 
     private boolean menuItemClicked(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.btn_nav_home:
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
-                loadHomeFragment();
-                return true;
-            default:
-                return false;
+        if(item.getItemId() == R.id.btn_nav_home) {
+            closeDrawer();
+            loadHomeFragment();
+            return true;
+        } else {
+            return false;
         }
     }
 
+    private void closeDrawer() {
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
     private void loadHomeFragment() {
-        HomeFragment fragment = HomeFragment.newInstance(currentUser);
+        mHomeFragment = HomeFragment.newInstance(mUser);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
-                binding.fragmentPlaceholder.getId(),
-                fragment,
-                fragment.getClass().getSimpleName())
-                .addToBackStack(fragment.getClass().getSimpleName())
+                mBinding.fragmentPlaceholder.getId(),
+                mHomeFragment,
+                mHomeFragment.getClass().getSimpleName())
                 .commit();
     }
 
-    private void revokeToken() {
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor edit = sp.edit();
-        edit.remove("token");
-        edit.apply();
-    }
-
     private void startLoginActivity() {
+
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

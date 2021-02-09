@@ -23,7 +23,6 @@
             app:cv_hasBoundaries="true"
             app:cv_inDateStyle="none"
             app:cv_maxRowCount="1"
-            app:cv_monthHeaderResource="@layout/view_calendar_month"
             app:cv_orientation="horizontal"
             app:cv_outDateStyle="none"
             app:cv_scrollMode="continuous" />
@@ -35,7 +34,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="8dp"
             android:nestedScrollingEnabled="true"
-            android:padding="8dp"
+            android:layout_marginHorizontal="8dp"
             android:visibility="invisible"
             tools:listitem="@layout/item_user_calendar_event" />
 

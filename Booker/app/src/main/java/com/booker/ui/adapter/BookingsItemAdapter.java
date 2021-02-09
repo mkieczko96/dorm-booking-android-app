@@ -21,12 +21,7 @@ public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
     public final ArrayList<Booking> list;
     private final Context context;
 
-    public BookingsItemAdapter(Context context) {
-        this.list = new ArrayList<>();
-        this.context = context;
-    }
-
-    public BookingsItemAdapter(ArrayList<Booking> list, Context context) {
+    public BookingsItemAdapter(Context context, ArrayList<Booking> list) {
         this.list = list;
         this.context = context;
     }
@@ -48,7 +43,7 @@ public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null) {
+        if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.item_user_calendar_event, null);
         }
