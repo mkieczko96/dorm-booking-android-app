@@ -31,10 +31,11 @@
             android:id="@+id/event_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="8dp"
             android:nestedScrollingEnabled="true"
-            android:layout_marginHorizontal="8dp"
             android:visibility="invisible"
             tools:listitem="@layout/item_user_calendar_event" />
 

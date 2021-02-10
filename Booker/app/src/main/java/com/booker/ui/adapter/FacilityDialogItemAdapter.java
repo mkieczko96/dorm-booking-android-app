@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ import com.booker.databinding.ItemFacilitySimpleBinding;
 
 import java.util.List;
 
-public class FacilityDialogItemAdapter extends BaseAdapter implements ListAdapter {
+public class FacilityDialogItemAdapter extends BaseAdapter implements ListAdapter, Filterable {
 
     List<Facility> dialogItems;
     Context context;
@@ -36,7 +38,7 @@ public class FacilityDialogItemAdapter extends BaseAdapter implements ListAdapte
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return getItem(i).getId();
     }
 
     @Override
@@ -52,5 +54,23 @@ public class FacilityDialogItemAdapter extends BaseAdapter implements ListAdapte
         itemTitle.setText(dialogItems.get(i).getName());
 
         return view;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults result = new FilterResults();
+                result.values = dialogItems;
+                result.count = dialogItems.size();
+                return result;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                notifyDataSetChanged();
+            }
+        };
     }
 }
