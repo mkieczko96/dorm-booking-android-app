@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:hint="@string/prompt_username"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -33,6 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:hint="@string/prompt_password"
+        app:errorEnabled="true"
+        app:endIconMode="password_toggle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +52,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_in_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="16dp"
         android:text="@string/action_sign_in"
-        app:layout_constraintTop_toBottomOf="@id/password"
         app:layout_constraintLeft_toLeftOf="@id/password"
         app:layout_constraintRight_toRightOf="@id/password"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        />
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

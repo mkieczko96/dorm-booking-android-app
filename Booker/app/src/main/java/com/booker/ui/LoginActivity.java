@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void validate() {
         if (!isUsernameValid()) {
-            binding.inputUsername.setError("Entered value is not a valid e-mail address!");
+            binding.username.setError("Entered value is not a valid e-mail address!");
             binding.signInButton.setEnabled(false);
         } else if (!isPasswordValid()) {
             binding.inputPassword.setError("Password should be at least 6 characters long!");
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void authenticate() {
-        if (!isUsernameValid() && !isPasswordValid()) {
+        if (!isUsernameValid() || !isPasswordValid()) {
             validate();
             onAuthenticationFailed();
             return;
