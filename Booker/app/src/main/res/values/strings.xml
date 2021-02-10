@@ -86,5 +86,10 @@
     <string name="msg_previous_day">Previous day</string>
     <string name="msg_next_day">Next day</string>
     <string name="title_save">Save</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_begin_date">Begin date</string>
+    <string name="title_end_date">End date</string>
+    <string name="msg_no_events">No events</string>
 
 </resources>

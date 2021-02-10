@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,6 +24,8 @@ import com.booker.data.models.User;
 import com.booker.databinding.FragmentHomeBinding;
 import com.booker.databinding.ViewCalendarDayBinding;
 import com.booker.ui.adapter.BookingsItemAdapter;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
 import com.kizitonwose.calendarview.model.CalendarMonth;
@@ -43,9 +48,12 @@ import java.util.Locale;
 
 import kotlin.Unit;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.widget.AdapterView.AdapterContextMenuInfo;
 
 @NoArgsConstructor
 public class HomeFragment extends Fragment {
@@ -63,6 +71,57 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        if(item.getItemId() == R.id.edit) {
+            editBooking(info.position);
+            return true;
+        } else if (item.getItemId() == R.id.delete) {
+            deleteBooking(info.position);
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
+    }
+
+    private void deleteBooking(int position) {
+        Booking booking = bookings.get(mSelectedDate).get(position);
+
+        Call<String> call =  ApiClient.getBookingsService()
+                .deleteBookingById(getBearerToken(), booking.getId());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()) {
+                    bookings.get(mSelectedDate).remove(position);
+                    Snackbar.make(
+                            requireView(),
+                            "Booking deleted successfully.",
+                            BaseTransientBottomBar.LENGTH_LONG
+                    ).show();
+                    updateAdapter(mSelectedDate);
+                } else {
+                    Snackbar.make(
+                            requireView(),
+                            "Booking was not deleted.",
+                            BaseTransientBottomBar.LENGTH_LONG
+                    ).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("DEL", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private void editBooking(int position) {
+        Log.i("CONMEN", "Edit clicked.");
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -71,8 +130,16 @@ public class HomeFragment extends Fragment {
         getUserBookings();
         adapter = new BookingsItemAdapter(requireContext(), new ArrayList<>());
         mHomeBinding.eventList.setAdapter(adapter);
+        registerForContextMenu(mHomeBinding.eventList);
         setCalendarView(mHomeBinding.calendarView);
         mHomeBinding.fabCreateBooking.setOnClickListener(this::onFabClick);
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_context, menu);
     }
 
     @NotNull
@@ -153,20 +220,21 @@ public class HomeFragment extends Fragment {
         adapter.list.clear();
         adapter.list.addAll(bookings.get(date) != null ? bookings.get(date) : new ArrayList<>());
 
-        boolean containsDate = bookings.containsKey(date);
+        boolean containsDate = bookings.containsKey(date) && !adapter.list.isEmpty();
         mHomeBinding.eventList.setVisibility(containsDate ? View.VISIBLE : View.INVISIBLE);
         mHomeBinding.noEventsInfo.setVisibility(containsDate ? View.INVISIBLE : View.VISIBLE);
 
         adapter.notifyDataSetChanged();
     }
 
+    @Setter
     class DayViewContainer extends ViewContainer {
-        final ViewCalendarDayBinding binding;
+        final ViewCalendarDayBinding mBinding;
         CalendarDay day;
 
         public DayViewContainer(@NotNull View view) {
             super(view);
-            binding = ViewCalendarDayBinding.bind(view);
+            mBinding = ViewCalendarDayBinding.bind(view);
             view.setOnClickListener(v -> setSelectedDate(day.getDate()));
         }
     }
@@ -174,11 +242,11 @@ public class HomeFragment extends Fragment {
     class DayViewBinder implements DayBinder<DayViewContainer> {
         @Override
         public void bind(@NotNull DayViewContainer container, @NotNull CalendarDay day) {
-            container.day = day;
-            TextView calendarDay = container.binding.calendarDay;
-            TextView calendarDayHeader = container.binding.calendarDayHeader;
-            View eventMarker = container.binding.calendarDayEventMarker;
-            View selectedMarker = container.binding.calendarDaySelectedMarker;
+            container.setDay(day);
+            TextView calendarDay = container.mBinding.calendarDay;
+            TextView calendarDayHeader = container.mBinding.calendarDayHeader;
+            View eventMarker = container.mBinding.calendarDayEventMarker;
+            View selectedMarker = container.mBinding.calendarDaySelectedMarker;
 
             calendarDay.setText(String.valueOf(day.getDay()));
             calendarDayHeader.setText(day.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
@@ -194,8 +262,9 @@ public class HomeFragment extends Fragment {
                 selectedMarker.setVisibility(View.VISIBLE);
                 eventMarker.setVisibility(View.INVISIBLE);
             } else {
+                boolean hasEvents = bookings.containsKey(day.getDate()) && !bookings.get(day.getDate()).isEmpty();
                 selectedMarker.setVisibility(View.INVISIBLE);
-                eventMarker.setVisibility(bookings.containsKey(day.getDate()) ? View.VISIBLE : View.INVISIBLE);
+                eventMarker.setVisibility(hasEvents ? View.VISIBLE : View.INVISIBLE);
             }
         }
 

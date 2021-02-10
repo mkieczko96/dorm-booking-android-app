@@ -42,9 +42,9 @@ public class BookingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeBookingById(@PathVariable("id") long id) {
+    public ResponseEntity removeBookingById(@PathVariable("id") long id) {
         bookingRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.GONE).body("Booking #" + id + " was deleted.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping

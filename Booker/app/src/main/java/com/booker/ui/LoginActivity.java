@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnSignIn.setOnClickListener(view -> authenticate());
+        binding.signInButton.setOnClickListener(view -> authenticate());
     }
 
     @Override
@@ -44,20 +44,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private void validate() {
         if (!isUsernameValid()) {
-            binding.etUsername.setError("Entered value is not a valid e-mail address!");
-            binding.btnSignIn.setEnabled(false);
+            binding.inputUsername.setError("Entered value is not a valid e-mail address!");
+            binding.signInButton.setEnabled(false);
         } else if (!isPasswordValid()) {
-            binding.etPassword.setError("Password should be at least 6 characters long!");
-            binding.btnSignIn.setEnabled(false);
+            binding.inputPassword.setError("Password should be at least 6 characters long!");
+            binding.signInButton.setEnabled(false);
         } else {
-            binding.etUsername.setError(null);
-            binding.etPassword.setError(null);
-            binding.btnSignIn.setEnabled(true);
+            binding.inputUsername.setError(null);
+            binding.inputPassword.setError(null);
+            binding.signInButton.setEnabled(true);
         }
     }
 
     private Boolean isUsernameValid() {
-        String username = binding.etUsername.getText().toString();
+        String username = binding.inputUsername.getText().toString();
 
         Pattern pattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])");
         Matcher matcher = pattern.matcher(username);
@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Boolean isPasswordValid() {
-        return binding.etPassword.getText().toString().length() > 5;
+        return binding.inputPassword.getText().toString().length() > 5;
     }
 
     private void authenticate() {
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        binding.btnSignIn.setEnabled(false);
+        binding.signInButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.Theme_AppCompat_Light_Dialog);
@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        String username = binding.etUsername.getText().toString();
-        String password = binding.etPassword.getText().toString();
+        String username = binding.inputUsername.getText().toString();
+        String password = binding.inputPassword.getText().toString();
 
         String httpBasic = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
 
@@ -108,13 +108,13 @@ public class LoginActivity extends AppCompatActivity {
                         t.getMessage(),
                         BaseTransientBottomBar.LENGTH_LONG)
                         .show();
-                binding.btnSignIn.setEnabled(true);
+                binding.signInButton.setEnabled(true);
             }
         });
     }
 
     private void onAuthenticationSuccess(Response<Map<Object, Object>> user) {
-        binding.btnSignIn.setEnabled(true);
+        binding.signInButton.setEnabled(true);
         new Handler().postDelayed(() -> {
             saveToken(user.body().get("token").toString());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -134,6 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                 R.string.login_failed,
                 BaseTransientBottomBar.LENGTH_LONG)
                 .show();
-        binding.btnSignIn.setEnabled(true);
+        binding.signInButton.setEnabled(true);
     }
 }
