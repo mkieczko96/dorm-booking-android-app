@@ -1,6 +1,6 @@
 package com.booker.ui.adapter;
 
-import com.booker.data.models.Facility;
+import com.booker.api.data.Facility;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

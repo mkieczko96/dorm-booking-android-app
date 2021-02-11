@@ -9,7 +9,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.booker.R;
-import com.booker.data.models.Booking;
+import com.booker.api.data.Booking;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

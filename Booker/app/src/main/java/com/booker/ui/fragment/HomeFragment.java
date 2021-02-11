@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import com.booker.R;
 import com.booker.api.ApiClient;
-import com.booker.data.models.Booking;
-import com.booker.data.models.User;
+import com.booker.api.data.Booking;
+import com.booker.api.data.User;
 import com.booker.databinding.FragmentHomeBinding;
 import com.booker.databinding.ViewCalendarDayBinding;
 import com.booker.ui.adapter.BookingsItemAdapter;
