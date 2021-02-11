@@ -118,7 +118,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void editBooking(int position) {
-        Log.i("CONMEN", "Edit clicked.");
+        Booking booking = bookings.get(mSelectedDate).get(position);
+        CreateBookingFragment fragment = CreateBookingFragment.newInstance(mUser, mSelectedDate, booking);
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_placeholder, fragment, fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
+                .commit();
     }
 
     @Override

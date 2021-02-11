@@ -65,7 +65,6 @@ public class DialogFacilityCalendar extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        setSelectedDate(mSelectedDate);
     }
 
     @Override
@@ -83,6 +82,7 @@ public class DialogFacilityCalendar extends DialogFragment {
         mBinding.nextDay.setOnClickListener(v -> setSelectedDate(mSelectedDate.plusDays(1)));
 
         createTimeSpans();
+        setSelectedDate(mSelectedDate);
     }
 
     public static DialogFacilityCalendar newInstance(User user, Facility facility, LocalDate date) {
