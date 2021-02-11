@@ -28,13 +28,13 @@
         android:layout_height="5.5dp"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_calendar_event_marker" />
+        android:background="@drawable/item_calendar_event_bg" />
 
     <View
         android:id="@+id/calendar_day_selected_marker"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@drawable/bg_calendar_selected_day_marker" />
+        android:background="@drawable/item_calendar_selected_day_bg" />
 
 </FrameLayout>

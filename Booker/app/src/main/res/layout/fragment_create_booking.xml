@@ -61,7 +61,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="10"
                 android:hint="@string/title_begin_date"
-                app:endIconDrawable="@drawable/ic_today_24"
+                app:endIconDrawable="@drawable/ic_today_24dp"
                 app:endIconMode="custom"
                 app:startIconDrawable="@drawable/ic_calendar_24dp">
 
@@ -94,7 +94,7 @@
                 android:layout_weight="10"
                 app:startIconDrawable="@drawable/ic_calendar_24dp"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_today_24"
+                app:endIconDrawable="@drawable/ic_today_24dp"
                 android:hint="@string/title_end_date">
 
                 <com.google.android.material.textfield.TextInputEditText

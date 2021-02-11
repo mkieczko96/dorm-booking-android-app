@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/item_event_slot_bg"
             android:contentDescription="@string/msg_previous_day"
-            android:src="@drawable/ic_chevron_left_24"
+            android:src="@drawable/ic_chevron_left_24dp"
         />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/item_event_slot_bg"
             android:contentDescription="@string/msg_next_day"
-            android:src="@drawable/ic_chevron_right_24"
+            android:src="@drawable/ic_chevron_right_24dp"
             />
 
     </LinearLayout>
