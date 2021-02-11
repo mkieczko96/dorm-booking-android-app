@@ -11,6 +11,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -27,4 +28,7 @@ public interface BookingService {
 
     @DELETE("bookings/{id}")
     Call<String> deleteBookingById(@Header("Authorization") String bearer, @Path("id") long id);
+
+    @PUT("bookings/{id}")
+    Call<Booking> updateBooking(@Header("Authorization") String bearerToken, @Path("id") long id, @Body Booking booking);
 }
