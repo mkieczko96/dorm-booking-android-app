@@ -60,7 +60,7 @@ public class BookingsItemAdapter extends BaseAdapter implements ListAdapter {
 
         Date beginDate = new Date(b.getBeginAt() * 1000);
         Date endDate = new Date(b.getEndAt() * 1000);
-        SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH);
+        SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.ENGLISH);
 
         beginAt.setText(sfd.format(beginDate));
         endAt.setText(sfd.format(endDate));
