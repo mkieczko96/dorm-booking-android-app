@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_500">
+
+    <TextView
+        android:id="@+id/calendar_day"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/day_layout_placeholder"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/calendar_day_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|top"
+        android:text="@string/first_day_header"
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
+
+    <View
+        android:id="@+id/calendar_day_event_marker"
+        android:layout_width="5.5dp"
+        android:layout_height="5.5dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/item_calendar_event_bg" />
+
+    <View
+        android:id="@+id/calendar_day_selected_marker"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/item_calendar_selected_day_bg" />
+
+</FrameLayout>

@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="Widget.Theme.Booker.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+    </style>
+
+    <style name="Booker.DayView.HorizontalRule" parent="">
+        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_columnWeight">10</item>
+        <item name="android:layout_column">1</item>
+        <item name="android:layout_columnSpan">1</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/gray_400</item>
+        <item name="android:layout_gravity">top</item>
+    </style>
+
+    <style name="Booker.DayView.TextView" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_column">0</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_gravity">top|end</item>
+        <item name="android:layout_marginEnd">4dp</item>
+    </style>
+
+</resources>

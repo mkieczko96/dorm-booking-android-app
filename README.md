@@ -34,3 +34,12 @@
     - https://greenrobot.org/greendao/
     - https://github.com/google/gson
     - https://github.com/kizitonwose/CalendarView
+
+# Business Requirements
+Create mobile application that will allow users - living in a dorm - to book in-dorm facilities like laundry room, gym, fitness room, etc. Users should be able to log into application using their credentials to WIKAMP if possible. 
+
+## Personal Data - Account Management
+Users should not be allowed to create accounts by their own. Users are not allowed to change their room number nor e-mail address by themselves. Users can change their GDPR preferences. 
+
+## Bookings
+User can create bookings to facilities on every floor, except of landry room - user can book laundry room only on his floor. Number of maximum bookings should be calculated automatically by checking number of default duration slots for each facility between 6:00 and 00:00 through the month. User should not create more bookings for specific facility that is allowed. User can see all of his bookings and modify them before they start. User can prolong booking when it already started but before it ends only if there is no next appointment created. User can transfer booking to another user after agreement of both sides. User can preview schedule of selected facility to find empty slot in the schedule. Booking in facility schedule has room number visible. User can report issues with facility during the booking like: mess, there was a party, device damage. All bookings that are finished should be moved to archive after an hour from their ending.

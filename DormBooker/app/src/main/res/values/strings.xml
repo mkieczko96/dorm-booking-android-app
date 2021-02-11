@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Dorm Booker</string>
+    <string name="text_tv_room">TV</string>
+    <string name="text_gym_room">Gym</string>
+    <string name="text_laundry_room">Laundry</string>
+    <string name="text_billiard_room">Billiard</string>
+    <string name="text_fitness_room">Fitness</string>
+    <string name="text_tennis_room">Tennis</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
