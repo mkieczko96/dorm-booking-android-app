@@ -71,9 +71,30 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mHomeBinding = FragmentHomeBinding.bind(view);
+        bookings.clear();
+        getUserBookings();
+        adapter = new BookingsItemAdapter(requireContext(), new ArrayList<>());
+        mHomeBinding.eventList.setAdapter(adapter);
+        registerForContextMenu(mHomeBinding.eventList);
+        setCalendarView(mHomeBinding.calendarView);
+        mHomeBinding.fabCreateBooking.setOnClickListener(this::onFabClick);
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_context, menu);
+    }
+
+    @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if(item.getItemId() == R.id.edit) {
+        if (item.getItemId() == R.id.edit) {
             editBooking(info.position);
             return true;
         } else if (item.getItemId() == R.id.delete) {
@@ -84,16 +105,25 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @NotNull
+    public static HomeFragment newInstance(User user) {
+        HomeFragment newFragment = new HomeFragment();
+        newFragment.mUser = user;
+        newFragment.mTodayDate = LocalDate.now();
+        newFragment.bookings = new HashMap<>();
+        return newFragment;
+    }
+
     private void deleteBooking(int position) {
         Booking booking = bookings.get(mSelectedDate).get(position);
 
-        Call<String> call =  ApiClient.getBookingsService()
+        Call<String> call = ApiClient.getBookingsService()
                 .deleteBookingById(getBearerToken(), booking.getId());
 
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     bookings.get(mSelectedDate).remove(position);
                     Snackbar.make(
                             requireView(),
@@ -124,36 +154,6 @@ public class HomeFragment extends Fragment {
                 .replace(R.id.fragment_placeholder, fragment, fragment.getClass().getSimpleName())
                 .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mHomeBinding = FragmentHomeBinding.bind(view);
-        bookings.clear();
-        getUserBookings();
-        adapter = new BookingsItemAdapter(requireContext(), new ArrayList<>());
-        mHomeBinding.eventList.setAdapter(adapter);
-        registerForContextMenu(mHomeBinding.eventList);
-        setCalendarView(mHomeBinding.calendarView);
-        mHomeBinding.fabCreateBooking.setOnClickListener(this::onFabClick);
-    }
-
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = requireActivity().getMenuInflater();
-        inflater.inflate(R.menu.menu_context, menu);
-    }
-
-    @NotNull
-    public static HomeFragment newInstance(User user) {
-        HomeFragment newFragment = new HomeFragment();
-        newFragment.mUser = user;
-        newFragment.mTodayDate = LocalDate.now();
-        newFragment.bookings = new HashMap<>();
-        return newFragment;
     }
 
     private void onFabClick(View view) {

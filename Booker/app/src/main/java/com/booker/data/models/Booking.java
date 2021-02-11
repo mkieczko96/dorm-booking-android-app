@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Booking {
-    private String imageURL;
 
     @Expose
     @SerializedName("id")
