@@ -1,6 +1,6 @@
-package com.booker.api.service;
+package com.booker.api.services;
 
-import com.booker.data.models.Booking;
+import com.booker.api.data.Booking;
 
 import java.util.List;
 import java.util.Map;

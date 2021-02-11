@@ -1,4 +1,4 @@
-package com.booker.api.service;
+package com.booker.api.services;
 
 import java.util.Map;
 

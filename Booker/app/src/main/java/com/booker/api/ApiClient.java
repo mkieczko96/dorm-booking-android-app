@@ -1,9 +1,9 @@
 package com.booker.api;
 
-import com.booker.api.service.BookingService;
-import com.booker.api.service.FacilityService;
-import com.booker.api.service.LoginService;
-import com.booker.api.service.UserService;
+import com.booker.api.services.BookingService;
+import com.booker.api.services.FacilityService;
+import com.booker.api.services.LoginService;
+import com.booker.api.services.UserService;
 
 import java.util.concurrent.TimeUnit;
 

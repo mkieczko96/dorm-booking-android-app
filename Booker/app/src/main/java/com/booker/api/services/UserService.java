@@ -1,6 +1,6 @@
-package com.booker.api.service;
+package com.booker.api.services;
 
-import com.booker.data.models.User;
+import com.booker.api.data.User;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
