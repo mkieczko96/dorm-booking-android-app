@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,13 +21,16 @@ import com.booker.R;
 import com.booker.api.ApiClient;
 import com.booker.api.data.Booking;
 import com.booker.api.data.Facility;
+import com.booker.api.data.Reminder;
 import com.booker.api.data.User;
+import com.booker.api.services.ReminderService;
+import com.booker.api.services.callbacks.PostBookingCallback;
 import com.booker.databinding.FragmentCreateBookingBinding;
 import com.booker.databinding.ViewNotificationListFooterBinding;
 import com.booker.ui.BookingDates;
 import com.booker.ui.adapter.FacilityDialogItemAdapter;
-import com.booker.ui.adapter.NotificationItem;
 import com.booker.ui.adapter.NotificationItemAdapter;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,14 +56,17 @@ import retrofit2.Response;
 public class CreateBookingFragment extends DialogFragment {
 
     DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy @ HH:mm");
-    private ListView notificationList;
     private Facility mSelectedFacility;
     private User mUser;
     private FragmentCreateBookingBinding mBinding;
     private LocalDate mSelectedDate;
     private BookingDates mBookingDates;
     private ActionMode mActionMode;
-    private Booking mBooking;
+    private Booking mEditBooking;
+    private Booking mNewBooking;
+    private ArrayList<Reminder> mNotificationsList;
+    private String[] mOptions;
+    private int[] mSeconds;
 
     @Override
     public void onStart() {
@@ -84,26 +89,33 @@ public class CreateBookingFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mOptions = getResources()
+                .getStringArray(R.array.notification_time_options);
+        mSeconds = new int[]{0, 600, 900, 1800, 3600, 7200, 86400, 172800, 604800};
+
         ActionMode.Callback actionMode = new CreateBookingActionMode();
         mActionMode = requireActivity().startActionMode(actionMode);
         mBinding = FragmentCreateBookingBinding.bind(view);
-        notificationList = mBinding.bookingNotifications;
         getFacilityDialogArrayList();
+        //setNotificationListWithDefaultValue();
 
-        if (mBooking == null) {
+        if (mEditBooking == null) {
             mActionMode.setTitle("New booking");
-            setNotificationListWithDefaultValue();
+            mNewBooking = new Booking();
         } else {
             mActionMode.setTitle("Edit booking");
-            mSelectedFacility = mBooking.getFacility();
-            mBinding.facilityDropdown.setText(mBooking.getFacility().getName());
+            mSelectedFacility = mEditBooking.getFacility();
+            mBinding.facilityDropdown.setText(mEditBooking.getFacility().getName());
             mBinding.facilityDropdown.setEnabled(false);
 
-            LocalDateTime start = LocalDateTime.ofEpochSecond(mBooking.getBeginAt(), 0, ZoneOffset.UTC);
-            LocalDateTime end = LocalDateTime.ofEpochSecond(mBooking.getEndAt(), 0, ZoneOffset.UTC);
+            LocalDateTime start = LocalDateTime.ofEpochSecond(mEditBooking.getBeginAt(), 0, ZoneOffset.UTC);
+            LocalDateTime end = LocalDateTime.ofEpochSecond(mEditBooking.getEndAt(), 0, ZoneOffset.UTC);
             mBinding.beginDateTime.setText(format.format(start));
             mBinding.endDateTime.setText(format.format(end));
         }
+
+        loadNotifications();
+
         mBinding.beginDateTime.setOnClickListener(this::onDateTimeClick);
         mBinding.endDateTime.setOnClickListener(this::onDateTimeClick);
     }
@@ -112,7 +124,7 @@ public class CreateBookingFragment extends DialogFragment {
         CreateBookingFragment fragment = new CreateBookingFragment();
         fragment.mUser = user;
         fragment.mSelectedDate = date;
-        fragment.mBooking = null;
+        fragment.mEditBooking = null;
         return fragment;
     }
 
@@ -120,7 +132,7 @@ public class CreateBookingFragment extends DialogFragment {
         CreateBookingFragment fragment = new CreateBookingFragment();
         fragment.mUser = user;
         fragment.mSelectedDate = date;
-        fragment.mBooking = booking;
+        fragment.mEditBooking = booking;
         return fragment;
     }
 
@@ -150,35 +162,45 @@ public class CreateBookingFragment extends DialogFragment {
         });
     }
 
-    private void setNotificationListWithDefaultValue() {
-        ArrayList<NotificationItem> items = getDefaultNotificationsList();
-        Context context = getContext();
+    private void loadNotifications() {
+        if (mEditBooking != null) {
+            mNotificationsList = (ArrayList<Reminder>) mEditBooking.getReminders();
+        } else {
+            mNotificationsList = initNotification();
+        }
 
-        assert context != null;
-        NotificationItemAdapter adapter = new NotificationItemAdapter(context, items);
+        NotificationItemAdapter adapter = new NotificationItemAdapter(requireContext(), mNotificationsList);
+        ViewNotificationListFooterBinding bind = ViewNotificationListFooterBinding.inflate(getLayoutInflater());
 
-        ViewNotificationListFooterBinding binding = ViewNotificationListFooterBinding.inflate(getLayoutInflater());
-        Button addNotification = binding.notificationAdd;
-        addNotification.setOnClickListener(onAddNotificationButtonClick(items, adapter));
-        notificationList.addFooterView(binding.getRoot());
-
-        notificationList.setAdapter(adapter);
+        bind.notificationAdd.setOnClickListener(onAddNotificationButtonClick(mNotificationsList, adapter));
+        mBinding.bookingNotifications.addFooterView(bind.getRoot());
+        mBinding.bookingNotifications.setAdapter(adapter);
     }
 
     @NotNull
-    private View.OnClickListener onAddNotificationButtonClick(ArrayList<NotificationItem> items, NotificationItemAdapter adapter) {
+    private View.OnClickListener onAddNotificationButtonClick(ArrayList<Reminder> items, NotificationItemAdapter adapter) {
         return v -> {
-            items.add(new NotificationItem(getResources()
-                    .getStringArray(R.array.notification_time_options)[0]));
-
-            if (adapter.getCount() == 5) v.setEnabled(false);
-            adapter.notifyDataSetChanged();
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+            builder.setTitle(R.string.notification_time_dialog_title)
+                    .setItems(R.array.notification_time_options, (dialog, item) -> {
+                        if (items.stream().noneMatch(n -> n.getLabel().equals(mOptions[item]))) {
+                            items.add(new Reminder(mSeconds[item], mOptions[item]));
+                            items.sort((o1, o2) -> o1.getDuration() - o2.getDuration());
+                            if (adapter.getCount() == 5) v.setEnabled(false);
+                            adapter.notifyDataSetChanged();
+                        }
+                        dialog.dismiss();
+                    })
+                    .show();
         };
     }
 
-    private ArrayList<NotificationItem> getDefaultNotificationsList() {
-        ArrayList<NotificationItem> items = new ArrayList<>();
-        items.add(new NotificationItem("10 minutes before"));
+    private ArrayList<Reminder> initNotification() {
+        ArrayList<Reminder> items = new ArrayList<>();
+        Reminder reminder = new Reminder();
+        reminder.setLabel(mOptions[1]);
+        reminder.setDuration(mSeconds[1]);
+        items.add(reminder);
         return items;
     }
 
@@ -236,33 +258,44 @@ public class CreateBookingFragment extends DialogFragment {
         booking.setFacility(mSelectedFacility);
         booking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
         booking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
+        String token = getBearerToken();
 
-        Call<Booking> call = ApiClient.getBookingsService().saveBooking(getBearerToken(), booking);
-        call.enqueue(new CreateBookingCallback());
+        Thread post = new Thread(() -> {
+            try {
+                Response<Booking> call = ApiClient.getBookingsService().saveBooking(token, booking)
+                        .execute();
+                if (call.isSuccessful()) {
+                    Booking b = call.body();
+                    ReminderService service = ApiClient.getReminderService();
+                    mNotificationsList.forEach(r -> {
+                        r.setMessage("Booking is about to start.");
+                        r.setTitle(b.getFacility().getName() + " booking");
+                        r.setTriggerTime(b.getBeginAt() - r.getDuration());
+                        r.setBookingId(b.getId());
+
+                        try {
+                            service.save(token, r).execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        post.start();
+
     }
 
     private void updateBooking() {
-        mBooking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
-        mBooking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
-
-        ApiClient.getBookingsService().updateBooking(getBearerToken(), mBooking.getId(), mBooking)
-                .enqueue(new CreateBookingCallback());
-    }
-
-    static class CreateBookingCallback implements Callback<Booking> {
-
-        @Override
-        public void onResponse(@NotNull Call<Booking> call, Response<Booking> response) {
-            if (response.isSuccessful()) {
-                Booking savedBooking = response.body();
-                EventBus.getDefault().post(savedBooking);
-            }
+        if (mBookingDates != null) {
+            mEditBooking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
+            mEditBooking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
         }
-
-        @Override
-        public void onFailure(@NotNull Call<Booking> call, Throwable t) {
-            Log.e("POST", t.getLocalizedMessage());
-        }
+        mEditBooking.getReminders().forEach(r -> r.setTriggerTime(mEditBooking.getBeginAt() - r.getDuration()));
+        ApiClient.getBookingsService().updateBooking(getBearerToken(), mEditBooking.getId(), mEditBooking)
+                .enqueue(new PostBookingCallback());
     }
 
     class CreateBookingActionMode implements ActionMode.Callback {
@@ -278,14 +311,18 @@ public class CreateBookingFragment extends DialogFragment {
             return false;
         }
 
+        @SneakyThrows
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.save) {
-                if (mBooking == null) {
+                if (mEditBooking == null) {
                     saveBooking();
                 } else {
                     updateBooking();
                 }
+
+                Thread.sleep(300);
+
                 mode.finish();
                 return true;
             } else {

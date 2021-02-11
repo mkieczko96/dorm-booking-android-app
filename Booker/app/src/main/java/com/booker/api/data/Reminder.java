@@ -19,6 +19,8 @@ public class Reminder {
     @Expose
     private String label;
 
+    private int duration;
+
     @Expose
     private String title;
 
@@ -27,4 +29,9 @@ public class Reminder {
 
     @Expose
     private Long triggerTime;
+
+    public Reminder(int seconds, String option) {
+        duration = seconds;
+        label = option;
+    }
 }

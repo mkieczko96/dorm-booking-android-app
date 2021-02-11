@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
     private LocalDate mTodayDate;
     private LocalDate mSelectedDate;
     private BookingsItemAdapter adapter;
-    private HashMap<LocalDate, List<Booking>> bookings;
+    private HashMap<LocalDate, List<Booking>> mBookings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mHomeBinding = FragmentHomeBinding.bind(view);
-        bookings.clear();
+        mBookings.clear();
         getUserBookings();
         adapter = new BookingsItemAdapter(requireContext(), new ArrayList<>());
         mHomeBinding.eventList.setAdapter(adapter);
@@ -110,12 +110,12 @@ public class HomeFragment extends Fragment {
         HomeFragment newFragment = new HomeFragment();
         newFragment.mUser = user;
         newFragment.mTodayDate = LocalDate.now();
-        newFragment.bookings = new HashMap<>();
+        newFragment.mBookings = new HashMap<>();
         return newFragment;
     }
 
     private void deleteBooking(int position) {
-        Booking booking = bookings.get(mSelectedDate).get(position);
+        Booking booking = mBookings.get(mSelectedDate).get(position);
 
         Call<String> call = ApiClient.getBookingsService()
                 .deleteBookingById(getBearerToken(), booking.getId());
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    bookings.get(mSelectedDate).remove(position);
+                    mBookings.get(mSelectedDate).remove(position);
                     Snackbar.make(
                             requireView(),
                             "Booking deleted successfully.",
@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void editBooking(int position) {
-        Booking booking = bookings.get(mSelectedDate).get(position);
+        Booking booking = mBookings.get(mSelectedDate).get(position);
         CreateBookingFragment fragment = CreateBookingFragment.newInstance(mUser, mSelectedDate, booking);
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_placeholder, fragment, fragment.getClass().getSimpleName())
@@ -197,7 +197,7 @@ public class HomeFragment extends Fragment {
                         LocalDate localDate = Instant.ofEpochSecond(b.getBeginAt())
                                 .atZone(ZoneId.of("UCT"))
                                 .toLocalDate();
-                        bookings.computeIfAbsent(localDate, k -> new ArrayList<>()).add(b);
+                        mBookings.computeIfAbsent(localDate, k -> new ArrayList<>()).add(b);
                     });
                     mHomeBinding.calendarView.notifyCalendarChanged();
                     setSelectedDate(mSelectedDate != null ? mSelectedDate : mTodayDate);
@@ -223,9 +223,9 @@ public class HomeFragment extends Fragment {
 
     private void updateAdapter(LocalDate date) {
         adapter.list.clear();
-        adapter.list.addAll(bookings.get(date) != null ? bookings.get(date) : new ArrayList<>());
+        adapter.list.addAll(mBookings.get(date) != null ? mBookings.get(date) : new ArrayList<>());
 
-        boolean containsDate = bookings.containsKey(date) && !adapter.list.isEmpty();
+        boolean containsDate = mBookings.containsKey(date) && !adapter.list.isEmpty();
         mHomeBinding.eventList.setVisibility(containsDate ? View.VISIBLE : View.INVISIBLE);
         mHomeBinding.noEventsInfo.setVisibility(containsDate ? View.INVISIBLE : View.VISIBLE);
 
@@ -267,7 +267,7 @@ public class HomeFragment extends Fragment {
                 selectedMarker.setVisibility(View.VISIBLE);
                 eventMarker.setVisibility(View.INVISIBLE);
             } else {
-                boolean hasEvents = bookings.containsKey(day.getDate()) && !bookings.get(day.getDate()).isEmpty();
+                boolean hasEvents = mBookings.containsKey(day.getDate()) && !mBookings.get(day.getDate()).isEmpty();
                 selectedMarker.setVisibility(View.INVISIBLE);
                 eventMarker.setVisibility(hasEvents ? View.VISIBLE : View.INVISIBLE);
             }

@@ -11,8 +11,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "reminders")
 public class Reminder {
-    @Expose
+
     @Id
+    @Expose
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,7 +22,7 @@ public class Reminder {
     private Long bookingId;
 
     @ManyToOne
-    @JoinColumn(name = "booking_id", insertable = false, updatable = false)
+    @JoinColumn(name = "booking_id", referencedColumnName = "id", updatable = false, insertable = false)
     private Booking booking;
 
     @Expose

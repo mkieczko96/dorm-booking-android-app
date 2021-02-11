@@ -3,6 +3,7 @@ package com.dorm.booker.api.data.controllers;
 import com.dorm.booker.api.data.exceptions.BookingNotUpdatableException;
 import com.dorm.booker.api.data.exceptions.ResourceNotExistsException;
 import com.dorm.booker.api.data.models.Booking;
+import com.dorm.booker.api.data.models.Reminder;
 import com.dorm.booker.api.data.repositories.BookingRepository;
 import lombok.AllArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.domain.Between;
@@ -59,6 +60,7 @@ public class BookingController {
             booking.setUserId(updatedBooking.getUserId());
             booking.setBeginAt(updatedBooking.getBeginAt());
             booking.setEndAt(updatedBooking.getEndAt());
+            booking.setReminders(updatedBooking.getReminders());
         } else if (booking.getEndAt() > (System.currentTimeMillis() / 1000L)) {
             booking.setEndAt(updatedBooking.getEndAt());
         } else {
