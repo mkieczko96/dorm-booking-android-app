@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter @Setter
 @Entity @Table(name = "bookings")
@@ -24,6 +25,9 @@ public class Booking {
     @Column(name = "facility_id", insertable = false, updatable = false)
     private Long facilityId;
 
+    @OneToMany(mappedBy = "bookingId", cascade = CascadeType.REMOVE)
+    private List<Reminder> reminders;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties({
@@ -32,9 +36,8 @@ public class Booking {
     })
     private User user;
 
-
     @ManyToOne
     @JoinColumn(name = "facility_id", nullable = false)
     @JsonIgnoreProperties("bookings")
-    Facility facility;
+    private Facility facility;
 }

@@ -1237,3 +1237,10 @@ INSERT INTO [users_roles] (user_id, roles_id) VALUES
 (412, 1),
 (412, 2),
 (412, 3);
+
+INSERT INTO [reminder] (booking_id, label, message, title, trigger_time) VALUES
+(80, 'When booking starts', 'Your booking just started.', 'Laundry Room booking', 1613039400),
+(880, 'When booking starts', 'Your booking just started.', 'Laundry Room booking', 1613039400),
+(918, 'When booking starts', 'Your booking just started.', 'Laundry Room booking', 1613098800),
+(118, 'When booking starts', 'Your booking just started.', 'Laundry Room booking', 1613098800),
+(149, 'When booking starts', 'Your booking just started.', 'Laundry Room booking', 1613210400);
