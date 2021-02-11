@@ -30,6 +30,8 @@ import com.booker.ui.BookingDates;
 import com.booker.ui.adapter.FacilityDialogItemAdapter;
 import com.booker.ui.adapter.NotificationItem;
 import com.booker.ui.adapter.NotificationItemAdapter;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,7 +39,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +53,7 @@ import retrofit2.Response;
 @NoArgsConstructor
 public class CreateBookingFragment extends DialogFragment {
 
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy @ HH:mm");
     private ListView notificationList;
     private Facility mSelectedFacility;
     private User mUser;
@@ -56,6 +61,7 @@ public class CreateBookingFragment extends DialogFragment {
     private LocalDate mSelectedDate;
     private BookingDates mBookingDates;
     private ActionMode mActionMode;
+    private Booking mBooking;
 
     @Override
     public void onStart() {
@@ -80,37 +86,56 @@ public class CreateBookingFragment extends DialogFragment {
 
         ActionMode.Callback actionMode = new CreateBookingActionMode();
         mActionMode = requireActivity().startActionMode(actionMode);
-
         mBinding = FragmentCreateBookingBinding.bind(view);
         notificationList = mBinding.bookingNotifications;
-
         getFacilityDialogArrayList();
-        setNotificationListWithDefaultValue();
 
-        mBinding.endDate.setText(mSelectedDate.toString());
-        mBinding.endDate.setOnClickListener(this::onDateTimeClick);
-        mBinding.beginDate.setText(mSelectedDate.toString());
-        mBinding.beginDate.setOnClickListener(this::onDateTimeClick);
+        if (mBooking == null) {
+            mActionMode.setTitle("New booking");
+            setNotificationListWithDefaultValue();
+        } else {
+            mActionMode.setTitle("Edit booking");
+            mSelectedFacility = mBooking.getFacility();
+            mBinding.facilityDropdown.setText(mBooking.getFacility().getName());
+            mBinding.facilityDropdown.setEnabled(false);
+
+            LocalDateTime start = LocalDateTime.ofEpochSecond(mBooking.getBeginAt(), 0, ZoneOffset.UTC);
+            LocalDateTime end = LocalDateTime.ofEpochSecond(mBooking.getEndAt(), 0, ZoneOffset.UTC);
+            mBinding.beginDateTime.setText(format.format(start));
+            mBinding.endDateTime.setText(format.format(end));
+        }
+        mBinding.beginDateTime.setOnClickListener(this::onDateTimeClick);
+        mBinding.endDateTime.setOnClickListener(this::onDateTimeClick);
     }
 
     public static CreateBookingFragment newInstance(User user, LocalDate date) {
         CreateBookingFragment fragment = new CreateBookingFragment();
         fragment.mUser = user;
         fragment.mSelectedDate = date;
+        fragment.mBooking = null;
+        return fragment;
+    }
+
+    public static CreateBookingFragment newInstance(User user, LocalDate date, Booking booking) {
+        CreateBookingFragment fragment = new CreateBookingFragment();
+        fragment.mUser = user;
+        fragment.mSelectedDate = date;
+        fragment.mBooking = booking;
         return fragment;
     }
 
     @Subscribe
     public void onDateSelected(BookingDates dates) {
         mBookingDates = dates;
-        mBinding.beginDate.setText(dates.getBeginAt().toLocalDate().toString());
-        mBinding.beginTime.setText(dates.getBeginAt().toLocalTime().toString());
-        mBinding.endDate.setText(dates.getEndAt().toLocalDate().toString());
-        mBinding.endTime.setText(dates.getEndAt().toLocalTime().toString());
+        mBinding.beginDateTime.setText(dates.getBeginAt().format(format));
+        mBinding.endDateTime.setText(dates.getEndAt().format(format));
     }
 
     private void onDateTimeClick(View v) {
-        showDialog();
+        if (mSelectedFacility != null)
+            showDialog();
+        else
+            Snackbar.make(requireView(), "Facility was not selected.", BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
     private void setFacilityChooserDialog(ArrayList<Facility> items) {
@@ -118,7 +143,7 @@ public class CreateBookingFragment extends DialogFragment {
         mBinding.facilityDropdown.setAdapter(adapter);
         mBinding.facilityDropdown.setOnItemClickListener((p, v, pos, id) -> {
             mSelectedFacility = items.stream()
-                    .filter(f-> f.getId() == id)
+                    .filter(f -> f.getId() == id)
                     .findFirst()
                     .orElse(items.get(pos));
             mBinding.facilityDropdown.setText(mSelectedFacility.getName());
@@ -216,11 +241,19 @@ public class CreateBookingFragment extends DialogFragment {
         call.enqueue(new CreateBookingCallback());
     }
 
+    private void updateBooking() {
+        mBooking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
+        mBooking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
+
+        ApiClient.getBookingsService().updateBooking(getBearerToken(), mBooking.getId(), mBooking)
+                .enqueue(new CreateBookingCallback());
+    }
+
     static class CreateBookingCallback implements Callback<Booking> {
 
         @Override
         public void onResponse(@NotNull Call<Booking> call, Response<Booking> response) {
-            if(response.isSuccessful()) {
+            if (response.isSuccessful()) {
                 Booking savedBooking = response.body();
                 EventBus.getDefault().post(savedBooking);
             }
@@ -248,7 +281,11 @@ public class CreateBookingFragment extends DialogFragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.save) {
-                saveBooking();
+                if (mBooking == null) {
+                    saveBooking();
+                } else {
+                    updateBooking();
+                }
                 mode.finish();
                 return true;
             } else {
