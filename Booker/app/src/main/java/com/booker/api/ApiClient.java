@@ -3,6 +3,7 @@ package com.booker.api;
 import com.booker.api.services.BookingService;
 import com.booker.api.services.FacilityService;
 import com.booker.api.services.LoginService;
+import com.booker.api.services.ReminderService;
 import com.booker.api.services.UserService;
 
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,10 @@ public class ApiClient {
 
     public static FacilityService getFacilityService() {
         return getRetrofit().create(FacilityService.class);
+    }
+
+    public static ReminderService getReminderService() {
+        return getRetrofit().create(ReminderService.class);
     }
 
     public static UserService getUserService() {
