@@ -28,6 +28,10 @@ public class Booking {
     @Column(name = "end_at", nullable = false)
     private Long endAt;
 
+    @Expose
+    @Column(name = "timezone")
+    private String timezone;
+
     @Column(name = "facility_id", insertable = false, updatable = false)
     private Long facilityId;
 

@@ -30,6 +30,9 @@ public class Reminder {
     @Expose
     private Long triggerTime;
 
+    @Expose
+    private String timezone;
+
     public Reminder(int seconds, String option) {
         duration = seconds;
         label = option;

@@ -30,6 +30,10 @@ public class Reminder {
     private Long triggerTime;
 
     @Expose
+    @Column
+    private String timezone;
+
+    @Expose
     @Column(nullable = false)
     private String title;
 

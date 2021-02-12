@@ -35,6 +35,9 @@ public class Booking {
     private long endAt;
 
     @Expose
+    private String timezone;
+
+    @Expose
     @SerializedName("facility")
     private Facility facility;
 
