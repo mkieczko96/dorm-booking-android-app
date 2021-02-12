@@ -254,19 +254,19 @@ public class CreateBookingFragment extends DialogFragment {
     }
 
     private void saveBooking() {
-        Booking booking = new Booking();
-        booking.setUserId(mUser.getId());
-        booking.setUser(mUser);
-        booking.setFacilityId(mSelectedFacility.getId());
-        booking.setFacility(mSelectedFacility);
-        booking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
-        mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC);
-        booking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
+        mNewBooking.setUserId(mUser.getId());
+        mNewBooking.setUser(mUser);
+        mNewBooking.setFacilityId(mSelectedFacility.getId());
+        mNewBooking.setFacility(mSelectedFacility);
+        mNewBooking.setBeginAt(mBookingDates.getBeginAt().atZone(ZoneId.systemDefault()).toEpochSecond());
+        mBookingDates.getBeginAt().atZone(ZoneId.systemDefault()).toEpochSecond();
+        mNewBooking.setEndAt(mBookingDates.getEndAt().atZone(ZoneId.systemDefault()).toEpochSecond());
+        mNewBooking.setTimezone(ZoneId.systemDefault().toString());
         String token = getBearerToken();
 
         Thread post = new Thread(() -> {
             try {
-                Response<Booking> call = ApiClient.getBookingsService().saveBooking(token, booking)
+                Response<Booking> call = ApiClient.getBookingsService().saveBooking(token, mNewBooking)
                         .execute();
                 if (call.isSuccessful()) {
                     Booking b = call.body();
@@ -275,6 +275,7 @@ public class CreateBookingFragment extends DialogFragment {
                         r.setMessage("Booking is about to start.");
                         r.setTitle(b.getFacility().getName() + " booking");
                         r.setTriggerTime(b.getBeginAt() - r.getDuration());
+                        r.setTimezone(ZoneId.systemDefault().toString());
                         r.setBookingId(b.getId());
 
                         try {
@@ -294,14 +295,15 @@ public class CreateBookingFragment extends DialogFragment {
 
     private void updateBooking() {
         if (mBookingDates != null) {
-            mEditBooking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
-            mEditBooking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
+            mEditBooking.setBeginAt(mBookingDates.getBeginAt().atZone(ZoneId.systemDefault()).toEpochSecond());
+            mEditBooking.setEndAt(mBookingDates.getEndAt().atZone(ZoneId.systemDefault()).toEpochSecond());
         }
         mEditBooking.setReminders(new ArrayList<>());
         mNotificationsList.forEach(r -> {
            if(r.getId() == null) {
                r.setBookingId(mEditBooking.getId());
                r.setTriggerTime(mEditBooking.getBeginAt() - r.getDuration());
+               r.setTimezone(ZoneId.systemDefault().toString());
                r.setMessage("Booking is about to start");
                r.setTitle(mEditBooking.getFacility().getName() + " booking");
 

@@ -17,17 +17,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.booker.R;
+import com.booker.databinding.FragmentHomeBinding;
+import com.booker.databinding.ViewCalendarDayBinding;
 import com.booker.model.api.ApiClient;
 import com.booker.model.api.pojo.Booking;
 import com.booker.model.api.pojo.Reminder;
 import com.booker.model.api.pojo.User;
-import com.booker.databinding.FragmentHomeBinding;
-import com.booker.databinding.ViewCalendarDayBinding;
 import com.booker.ui.AlarmReceiver;
 import com.booker.ui.adapter.BookingsItemAdapter;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -45,8 +44,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -94,41 +91,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void createReminders(Context context) {
-        try {
-            Thread.sleep(500);
-
-            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            for (LocalDate date : mBookings.keySet()) {
-                if(date.isAfter(mTodayDate) || date.isEqual(mTodayDate)) {
-                    for (Booking b : mBookings.get(date)) {
-                        for (Reminder r : b.getReminders()) {
-                            Instant i = Instant.ofEpochSecond(r.getTriggerTime(), 0);
-                            ZonedDateTime zdt = ZonedDateTime.ofInstant(i, ZoneId.of("UTC"));
-
-                            if(zdt.toInstant().isAfter(Instant.now())) {
-                                PendingIntent intent = PendingIntent.getBroadcast(
-                                        context,
-                                        r.getId().intValue(),
-                                        new Intent(context, AlarmReceiver.class),
-                                        PendingIntent.FLAG_CANCEL_CURRENT);
-
-                                manager.setExact(AlarmManager.RTC_WAKEUP,
-                                        r.getTriggerTime() * 1000,
-                                        intent);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -157,6 +119,33 @@ public class HomeFragment extends Fragment {
         newFragment.mTodayDate = LocalDate.now();
         newFragment.mBookings = new HashMap<>();
         return newFragment;
+    }
+
+    private void createReminders(Context context) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        for (LocalDate date : mBookings.keySet()) {
+            if (date.isAfter(mTodayDate) || date.isEqual(mTodayDate)) {
+                for (Booking b : mBookings.get(date)) {
+                    for (Reminder r : b.getReminders()) {
+                        if (r.getTriggerTime() > Instant.now().getEpochSecond()) {
+                            Intent passableIntent = new Intent(context, AlarmReceiver.class);
+                            passableIntent.putExtra("REMINDER_TITLE", r.getTitle());
+                            passableIntent.putExtra("REMINDER_MESSAGE", r.getMessage());
+                            PendingIntent intent = PendingIntent.getBroadcast(
+                                    context,
+                                    r.getId().intValue(),
+                                    passableIntent,
+                                    PendingIntent.FLAG_CANCEL_CURRENT);
+
+                            manager.setExact(AlarmManager.RTC_WAKEUP,
+                                    r.getTriggerTime() * 1000,
+                                    intent);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void deleteBooking(int position) {
@@ -240,7 +229,7 @@ public class HomeFragment extends Fragment {
                     assert bookingList != null;
                     bookingList.forEach(b -> {
                         LocalDate localDate = Instant.ofEpochSecond(b.getBeginAt())
-                                .atZone(ZoneId.of("UCT"))
+                                .atZone(ZoneId.systemDefault())
                                 .toLocalDate();
                         mBookings.computeIfAbsent(localDate, k -> new ArrayList<>()).add(b);
                     });

@@ -23,7 +23,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// TODO: add token session handling
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;

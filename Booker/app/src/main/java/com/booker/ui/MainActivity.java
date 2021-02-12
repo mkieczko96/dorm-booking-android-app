@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             mBinding.navDrawer.setCheckedItem(R.id.btn_nav_home);
             getSupportFragmentManager().popBackStack();
         } else {
-            startLoginActivity();
+            finish();
         }
     }
 
@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
             closeDrawer();
             loadHomeFragment();
             return true;
+        } else if (item.getItemId() == R.id.btn_nav_sign_out) {
+            closeDrawer();
+            startLoginActivity();
+            return true;
         } else {
             return false;
         }
@@ -143,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startLoginActivity() {
-
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

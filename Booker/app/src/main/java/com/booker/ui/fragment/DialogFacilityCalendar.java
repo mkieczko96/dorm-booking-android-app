@@ -95,8 +95,8 @@ public class DialogFacilityCalendar extends DialogFragment {
 
     private void setSelectedDate(LocalDate date) {
         mSelectedDate = date;
-        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         try {
             mBinding.eventDay.setText(formatter.format(parser.parse(mSelectedDate.toString())));
         } catch (ParseException e) {
@@ -125,10 +125,12 @@ public class DialogFacilityCalendar extends DialogFragment {
     private Map<String, String> getRequestQueries() {
         Map<String, String> queries = new HashMap<>();
         queries.put("facility-id", String.valueOf(mSelectedFacility.getId()));
-        queries.put("between", String.valueOf(mSelectedDate.atStartOfDay(ZoneId.of("UTC"))
+        queries.put("between", String.valueOf(mSelectedDate
+                .atStartOfDay(ZoneId.systemDefault())
                 .toEpochSecond()));
         queries.put("and", String.valueOf(mSelectedDate.atTime(23, 59)
-                .toEpochSecond(ZoneOffset.UTC)));
+                .atZone(ZoneId.systemDefault())
+                .toEpochSecond()));
         return queries;
     }
 
@@ -160,16 +162,13 @@ public class DialogFacilityCalendar extends DialogFragment {
     }
 
     private String getBearerToken() {
-        Activity activity = getActivity();
-
-        assert activity != null;
-        return "Bearer " + activity.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
+        return "Bearer " + requireActivity()
+                .getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
                 .getString("dorm.booker.jwt", null);
     }
 
     private void drawEvents(List<Booking> bookings) {
-        SimpleDateFormat hour = new SimpleDateFormat("H", Locale.ENGLISH);
-        SimpleDateFormat compareDates = new SimpleDateFormat("dd-MM", Locale.ENGLISH);
+        SimpleDateFormat hour = new SimpleDateFormat("H", Locale.getDefault());
         Context context = requireContext();
 
         for (Booking b : bookings) {

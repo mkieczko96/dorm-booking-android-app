@@ -1,9 +1,7 @@
 package com.booker.ui;
 
-import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +18,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context, ID)
-                .setContentTitle("Title")
-                .setContentText("Content")
+                .setContentTitle(intent.getStringExtra("REMINDER_TITLE"))
+                .setContentText(intent.getStringExtra("REMINDER_MESSAGE"))
                 .setSmallIcon(R.drawable.ic_notification_24dp);
         NotificationChannel channels = new NotificationChannel(ID, CHANNEL, NotificationManager.IMPORTANCE_HIGH);
         manager.createNotificationChannel(channels);
