@@ -1,8 +1,8 @@
-package com.booker.api.services.callbacks;
+package com.booker.model.api.callbacks;
 
 import android.util.Log;
 
-import com.booker.api.data.Reminder;
+import com.booker.model.api.pojo.Reminder;
 
 import org.jetbrains.annotations.NotNull;
 

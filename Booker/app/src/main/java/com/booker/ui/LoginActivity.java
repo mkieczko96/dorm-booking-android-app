@@ -10,7 +10,7 @@ import android.util.Base64;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.booker.R;
-import com.booker.api.ApiClient;
+import com.booker.model.api.ApiClient;
 import com.booker.databinding.ActivityLoginBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;

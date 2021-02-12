@@ -18,13 +18,14 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.booker.R;
-import com.booker.api.ApiClient;
-import com.booker.api.data.Booking;
-import com.booker.api.data.Facility;
-import com.booker.api.data.Reminder;
-import com.booker.api.data.User;
-import com.booker.api.services.ReminderService;
-import com.booker.api.services.callbacks.PostBookingCallback;
+import com.booker.model.api.ApiClient;
+import com.booker.model.api.callbacks.PostReminderCallback;
+import com.booker.model.api.pojo.Booking;
+import com.booker.model.api.pojo.Facility;
+import com.booker.model.api.pojo.Reminder;
+import com.booker.model.api.pojo.User;
+import com.booker.model.api.services.ReminderService;
+import com.booker.model.api.callbacks.PostBookingCallback;
 import com.booker.databinding.FragmentCreateBookingBinding;
 import com.booker.databinding.ViewNotificationListFooterBinding;
 import com.booker.ui.BookingDates;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -196,10 +198,11 @@ public class CreateBookingFragment extends DialogFragment {
     }
 
     private ArrayList<Reminder> initNotification() {
-        ArrayList<Reminder> items = new ArrayList<>();
         Reminder reminder = new Reminder();
         reminder.setLabel(mOptions[1]);
         reminder.setDuration(mSeconds[1]);
+
+        ArrayList<Reminder> items = new ArrayList<>();
         items.add(reminder);
         return items;
     }
@@ -257,6 +260,7 @@ public class CreateBookingFragment extends DialogFragment {
         booking.setFacilityId(mSelectedFacility.getId());
         booking.setFacility(mSelectedFacility);
         booking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
+        mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC);
         booking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
         String token = getBearerToken();
 
@@ -293,7 +297,20 @@ public class CreateBookingFragment extends DialogFragment {
             mEditBooking.setBeginAt(mBookingDates.getBeginAt().toEpochSecond(ZoneOffset.UTC));
             mEditBooking.setEndAt(mBookingDates.getEndAt().toEpochSecond(ZoneOffset.UTC));
         }
-        mEditBooking.getReminders().forEach(r -> r.setTriggerTime(mEditBooking.getBeginAt() - r.getDuration()));
+        mEditBooking.setReminders(new ArrayList<>());
+        mNotificationsList.forEach(r -> {
+           if(r.getId() == null) {
+               r.setBookingId(mEditBooking.getId());
+               r.setTriggerTime(mEditBooking.getBeginAt() - r.getDuration());
+               r.setMessage("Booking is about to start");
+               r.setTitle(mEditBooking.getFacility().getName() + " booking");
+
+               ApiClient.getReminderService()
+                       .save(getBearerToken(),r)
+                       .enqueue(new PostReminderCallback());
+           }
+
+       });
         ApiClient.getBookingsService().updateBooking(getBearerToken(), mEditBooking.getId(), mEditBooking)
                 .enqueue(new PostBookingCallback());
     }

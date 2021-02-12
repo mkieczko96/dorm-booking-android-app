@@ -10,8 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.booker.R;
-import com.booker.api.data.Reminder;
 import com.booker.databinding.ItemNotificationBinding;
+import com.booker.model.api.ApiClient;
+import com.booker.model.api.callbacks.DeleteReminderCallback;
+import com.booker.model.api.callbacks.PutReminderCallback;
+import com.booker.model.api.pojo.Reminder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
@@ -66,13 +69,20 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
                         notificationItem.setLabel(mReminderLabels[item]);
                         mReminders.set(i, notificationItem);
                         notifyDataSetChanged();
+
+                        if(notificationItem.getId() != null)
+                            updateNotification(notificationItem);
+
                         dialog.dismiss();
                     })
-
                     .show();
         });
 
         binding.notificationDelete.setOnClickListener(notification -> {
+            if(mReminders.get(i).getId() != null) {
+                deleteNotification(mReminders.get(i));
+            }
+
             mReminders.remove(i);
             if (mReminders.size() < 5) {
                 ListView lv = (ListView) parent;
@@ -82,5 +92,21 @@ public class NotificationItemAdapter extends BaseAdapter implements ListAdapter 
         });
 
         return view;
+    }
+
+    private void deleteNotification(Reminder reminder) {
+        String token = mContext.getSharedPreferences(mContext.getString(R.string.pref_file), Context.MODE_PRIVATE)
+                .getString("dorm.booker.jwt", null);
+
+        ApiClient.getReminderService().remove("Bearer " + token, reminder.getId())
+            .enqueue(new DeleteReminderCallback());
+    }
+
+    private void updateNotification(Reminder reminder) {
+        String token = mContext.getSharedPreferences(mContext.getString(R.string.pref_file), Context.MODE_PRIVATE)
+                .getString("dorm.booker.jwt", null);
+
+        ApiClient.getReminderService().save("Bearer " + token, reminder)
+                .enqueue(new PutReminderCallback());
     }
 }

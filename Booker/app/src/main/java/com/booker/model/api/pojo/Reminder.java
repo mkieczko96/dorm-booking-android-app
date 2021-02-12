@@ -1,4 +1,4 @@
-package com.booker.api.data;
+package com.booker.model.api.pojo;
 
 import com.google.gson.annotations.Expose;
 

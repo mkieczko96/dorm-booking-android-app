@@ -1,4 +1,4 @@
-package com.booker.api.data;
+package com.booker.model.api.pojo;
 
 import android.os.Parcel;
 import android.os.Parcelable;

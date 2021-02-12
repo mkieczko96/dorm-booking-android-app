@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.booker.R;
-import com.booker.api.ApiClient;
-import com.booker.api.data.User;
+import com.booker.model.api.ApiClient;
+import com.booker.model.api.pojo.User;
 import com.booker.databinding.ActivityMainBinding;
 import com.booker.ui.fragment.HomeFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;

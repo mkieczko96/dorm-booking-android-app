@@ -18,10 +18,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.booker.R;
 import com.booker.Utility;
-import com.booker.api.ApiClient;
-import com.booker.api.data.Booking;
-import com.booker.api.data.Facility;
-import com.booker.api.data.User;
+import com.booker.model.api.ApiClient;
+import com.booker.model.api.pojo.Booking;
+import com.booker.model.api.pojo.Facility;
+import com.booker.model.api.pojo.User;
 import com.booker.databinding.DialogFacilityCalendarBinding;
 import com.booker.ui.BookingDates;
 

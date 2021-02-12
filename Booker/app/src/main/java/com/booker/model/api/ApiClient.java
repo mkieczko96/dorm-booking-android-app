@@ -1,10 +1,10 @@
-package com.booker.api;
+package com.booker.model.api;
 
-import com.booker.api.services.BookingService;
-import com.booker.api.services.FacilityService;
-import com.booker.api.services.LoginService;
-import com.booker.api.services.ReminderService;
-import com.booker.api.services.UserService;
+import com.booker.model.api.services.BookingService;
+import com.booker.model.api.services.FacilityService;
+import com.booker.model.api.services.LoginService;
+import com.booker.model.api.services.ReminderService;
+import com.booker.model.api.services.UserService;
 
 import java.util.concurrent.TimeUnit;
 

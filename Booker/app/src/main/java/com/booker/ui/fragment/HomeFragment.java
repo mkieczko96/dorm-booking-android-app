@@ -1,6 +1,9 @@
 package com.booker.ui.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,15 +17,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.booker.R;
-import com.booker.api.ApiClient;
-import com.booker.api.data.Booking;
-import com.booker.api.data.User;
+import com.booker.model.api.ApiClient;
+import com.booker.model.api.pojo.Booking;
+import com.booker.model.api.pojo.Reminder;
+import com.booker.model.api.pojo.User;
 import com.booker.databinding.FragmentHomeBinding;
 import com.booker.databinding.ViewCalendarDayBinding;
+import com.booker.ui.AlarmReceiver;
 import com.booker.ui.adapter.BookingsItemAdapter;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,9 +45,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -82,6 +91,42 @@ public class HomeFragment extends Fragment {
         registerForContextMenu(mHomeBinding.eventList);
         setCalendarView(mHomeBinding.calendarView);
         mHomeBinding.fabCreateBooking.setOnClickListener(this::onFabClick);
+
+    }
+
+    private void createReminders(Context context) {
+        try {
+            Thread.sleep(500);
+
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            for (LocalDate date : mBookings.keySet()) {
+                if(date.isAfter(mTodayDate) || date.isEqual(mTodayDate)) {
+                    for (Booking b : mBookings.get(date)) {
+                        for (Reminder r : b.getReminders()) {
+                            Instant i = Instant.ofEpochSecond(r.getTriggerTime(), 0);
+                            ZonedDateTime zdt = ZonedDateTime.ofInstant(i, ZoneId.of("UTC"));
+
+                            if(zdt.toInstant().isAfter(Instant.now())) {
+                                PendingIntent intent = PendingIntent.getBroadcast(
+                                        context,
+                                        r.getId().intValue(),
+                                        new Intent(context, AlarmReceiver.class),
+                                        PendingIntent.FLAG_CANCEL_CURRENT);
+
+                                manager.setExact(AlarmManager.RTC_WAKEUP,
+                                        r.getTriggerTime() * 1000,
+                                        intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -201,6 +246,7 @@ public class HomeFragment extends Fragment {
                     });
                     mHomeBinding.calendarView.notifyCalendarChanged();
                     setSelectedDate(mSelectedDate != null ? mSelectedDate : mTodayDate);
+                    createReminders(requireContext());
                 } else {
                     Log.e("BOOK", response.errorBody().toString());
                 }
