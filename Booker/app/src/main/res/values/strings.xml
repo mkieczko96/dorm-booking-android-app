@@ -92,5 +92,6 @@
     <string name="title_end_date">End date</string>
     <string name="msg_no_events">No events</string>
     <string name="title_notifications">Notifications</string>
+    <string name="msg_user_data_load_failed">Failed to load current users detials. Please try to log again.</string>
 
 </resources>
