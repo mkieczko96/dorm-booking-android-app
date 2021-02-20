@@ -1,6 +1,6 @@
 package com.booker.model.api.services;
 
-import com.booker.model.api.pojo.Reminder;
+import com.booker.model.data.Reminder;
 
 import java.util.List;
 

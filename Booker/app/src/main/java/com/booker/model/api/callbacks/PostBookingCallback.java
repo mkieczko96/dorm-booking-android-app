@@ -2,7 +2,7 @@ package com.booker.model.api.callbacks;
 
 import android.util.Log;
 
-import com.booker.model.api.pojo.Booking;
+import com.booker.model.data.Booking;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;

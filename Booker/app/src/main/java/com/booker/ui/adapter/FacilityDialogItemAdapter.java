@@ -11,7 +11,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.booker.R;
-import com.booker.model.api.pojo.Facility;
+import com.booker.model.data.Facility;
 import com.booker.databinding.ItemFacilitySimpleBinding;
 
 import java.util.List;

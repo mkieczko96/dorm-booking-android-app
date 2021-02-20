@@ -47,7 +47,7 @@
     <string name="welcome">"Authenticated"</string>
     <string name="invalid_username">Invalid username</string>
     <string name="invalid_password">Password must be at least 5 characters long</string>
-    <string name="login_failed">"Authentication failed"</string>
+    <string name="error_login_failed">"Authentication failed"</string>
 
     <string name="pref_file">"com.booker.pref.file"</string>
 

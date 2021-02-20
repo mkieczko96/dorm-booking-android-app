@@ -1,5 +1,7 @@
 package com.booker.model.api.services;
 
+import com.booker.model.data.JwtToken;
+
 import java.util.Map;
 
 import retrofit2.Call;
@@ -8,5 +10,5 @@ import retrofit2.http.POST;
 
 public interface LoginService {
     @POST("auth")
-    Call<Map<Object, Object>> authenticate(@Header("Authorization") String httpBasic);
+    Call<JwtToken> authenticate(@Header("Authorization") String httpBasic);
 }

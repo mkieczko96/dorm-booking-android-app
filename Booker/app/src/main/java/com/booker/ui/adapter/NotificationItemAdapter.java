@@ -14,7 +14,7 @@ import com.booker.databinding.ItemNotificationBinding;
 import com.booker.model.api.ApiClient;
 import com.booker.model.api.callbacks.DeleteReminderCallback;
 import com.booker.model.api.callbacks.PutReminderCallback;
-import com.booker.model.api.pojo.Reminder;
+import com.booker.model.data.Reminder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;

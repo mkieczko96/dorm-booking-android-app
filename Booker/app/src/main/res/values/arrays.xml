@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notification_message_options">
+        <item>Your booking has started.</item>
+        <item>Your booking will start in 10 minutes.</item>
+        <item>Your booking will start in 15 minutes.</item>
+        <item>Your booking will start in 30 minutes.</item>
+        <item>Your booking will start in 1 hour.</item>
+        <item>Your booking will start in 2 hours.</item>
+        <item>Your booking will start in 24 hours.</item>
+        <item>Your booking will start in 2 days.</item>
+        <item>Your booking will start in 1 week.</item>
+    </string-array>
+</resources>

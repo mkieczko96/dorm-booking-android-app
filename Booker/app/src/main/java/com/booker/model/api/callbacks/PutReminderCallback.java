@@ -1,6 +1,6 @@
 package com.booker.model.api.callbacks;
 
-import com.booker.model.api.pojo.Reminder;
+import com.booker.model.data.Reminder;
 
 import retrofit2.Call;
 import retrofit2.Callback;
