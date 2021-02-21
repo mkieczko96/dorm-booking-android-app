@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
     private void loadUserDetails(Resource<User> userResource) {
         NavDrawerHeaderBinding bind = NavDrawerHeaderBinding.bind(mBinding.navDrawer.getHeaderView(0));
         bind.progressBar.setVisibility(View.VISIBLE);
-        if (userResource.getMStatus() == Resource.Status.SUCCESS) {
-            mUser = userResource.getMData();
+        if (userResource.getStatus() == Resource.Status.SUCCESS) {
+            mUser = userResource.getData();
             bind.userDisplayName.setText(mUser.getDisplayName());
             bind.userEmail.setText(mUser.getUsername());
             bind.userRoom.setText(getString(R.string.msg_room, mUser.getRoom()));
-        } else if (userResource.getMStatus() == Resource.Status.ERROR) {
+        } else if (userResource.getStatus() == Resource.Status.ERROR) {
             Snackbar.make(mBinding.getRoot(),
                     getString(R.string.msg_user_data_load_failed),
                     BaseTransientBottomBar.LENGTH_LONG)
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null)
             mHomeFragment = (HomeFragment) getSupportFragmentManager().getFragment(savedInstanceState, "homeFragment");
         else
-            mHomeFragment = HomeFragment.newInstance(mUser);
+            mHomeFragment = HomeFragment.newInstance();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(

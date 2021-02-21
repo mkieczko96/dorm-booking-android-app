@@ -44,6 +44,12 @@ public class BookingController {
         return ResponseEntity.ok().body(booking);
     }
 
+    @GetMapping("/dates")
+    public ResponseEntity<List<Long>> findBookingById(@Spec(path = "userId", params = "user-id", spec = Equal.class) Specification<Booking> spec) {
+        List<Long> beginAtDates = bookingRepository.findAllBeginAtDates(spec);
+        return ResponseEntity.ok().body(beginAtDates);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity removeBookingById(@PathVariable("id") long id) {
         bookingRepository.deleteById(id);

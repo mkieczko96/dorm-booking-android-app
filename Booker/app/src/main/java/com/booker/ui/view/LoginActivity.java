@@ -47,13 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         if (areCredentialsValid()) {
             startProcessing();
             Credential c = new Credential();
-            c.setMUsername(mLoginBinding.inputUsername.getText().toString());
-            c.setMPassword(mLoginBinding.inputPassword.getText().toString());
+            c.setUsername(mLoginBinding.inputUsername.getText().toString());
+            c.setPassword(mLoginBinding.inputPassword.getText().toString());
             mLoginViewModel.authenticate(c).observe(LoginActivity.this, jwtToken -> {
-                if (jwtToken.getMStatus() == Resource.Status.SUCCESS) {
-                    mLoginViewModel.saveToken(jwtToken.getMData().getToken());
+                if (jwtToken.getStatus() == Resource.Status.SUCCESS) {
+                    mLoginViewModel.saveToken(jwtToken.getData().getToken());
                     onSuccess();
-                } else if (jwtToken.getMStatus() == Resource.Status.ERROR) {
+                } else if (jwtToken.getStatus() == Resource.Status.ERROR) {
                     onFailure();
                 }
             });

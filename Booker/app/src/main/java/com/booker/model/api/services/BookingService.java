@@ -17,6 +17,9 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface BookingService {
+    @GET("bookings/dates")
+    Call<List<Long>> findAllBeginAtDates(@Header("Authorization") String bearer, @Query("user-id") long userId);
+
     @GET("bookings")
     Call<List<Booking>> findBookingsByUserId(@Header("Authorization") String bearer, @Query("user-id") long userId);
 
@@ -27,7 +30,7 @@ public interface BookingService {
     Call<Booking> saveBooking(@Header("Authorization") String bearer, @Body Booking newBooking);
 
     @DELETE("bookings/{id}")
-    Call<String> deleteBookingById(@Header("Authorization") String bearer, @Path("id") long id);
+    Call<Booking> deleteBookingById(@Header("Authorization") String bearer, @Path("id") long id);
 
     @PUT("bookings/{id}")
     Call<Booking> updateBooking(@Header("Authorization") String bearerToken, @Path("id") long id, @Body Booking booking);
