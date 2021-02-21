@@ -9,13 +9,13 @@ import lombok.NonNull;
 public class Resource<T> {
 
     @NonNull
-    private Status mStatus;
+    private final Status mStatus;
 
     @Nullable
-    private T mData;
+    private final T mData;
 
     @Nullable
-    private String mMessage;
+    private final String mMessage;
 
     private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
         mStatus = status;
