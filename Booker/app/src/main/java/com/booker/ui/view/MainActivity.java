@@ -19,7 +19,7 @@ import com.booker.databinding.NavDrawerHeaderBinding;
 import com.booker.model.api.Resource;
 import com.booker.model.data.User;
 import com.booker.ui.view.fragment.HomeFragment;
-import com.booker.ui.viewmodel.UserViewModel;
+import com.booker.ui.viewmodel.MainViewModel;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MainActivity extends AppCompatActivity {
-    private UserViewModel mUserViewModel;
+    private MainViewModel mMainViewModel;
     private ActivityMainBinding mBinding;
     private HomeFragment mHomeFragment;
     private User mUser;
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         setNavigationDrawer(mBinding.drawerLayout);
         mBinding.navDrawer.setNavigationItemSelectedListener(this::menuItemClicked);
 
-        mUserViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication())
-                .create(UserViewModel.class);
+        mMainViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication())
+                .create(MainViewModel.class);
 
-        mUserViewModel.getCurrentUser().observe(this, this::loadUserDetails);
+        mMainViewModel.getCurrentUser().observe(this, this::loadUserDetails);
         startHomeFragment(savedInstanceState);
     }
 

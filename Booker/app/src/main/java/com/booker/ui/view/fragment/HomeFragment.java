@@ -25,7 +25,7 @@ import com.booker.model.data.Reminder;
 import com.booker.model.data.User;
 import com.booker.ui.adapter.BookingsItemAdapter;
 import com.booker.ui.viewmodel.HomeViewModel;
-import com.booker.ui.viewmodel.UserViewModel;
+import com.booker.ui.viewmodel.MainViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +43,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,7 +59,7 @@ public class HomeFragment extends Fragment {
     private LocalDate mSelectedDate;
     private List<LocalDate> mDates = new ArrayList<>();
     private ArrayList<Booking> mEvents = new ArrayList<>();
-    private UserViewModel mUserViewModel;
+    private MainViewModel mMainViewModel;
     private HomeViewModel mHomeViewModel;
     private BookingsItemAdapter mAdapter;
     private FragmentHomeBinding mHomeBinding;
@@ -75,9 +74,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHomeBinding = FragmentHomeBinding.bind(view);
-        mUserViewModel = new ViewModelProvider
+        mMainViewModel = new ViewModelProvider
                 .AndroidViewModelFactory(requireActivity().getApplication())
-                .create(UserViewModel.class);
+                .create(MainViewModel.class);
         mHomeViewModel = new ViewModelProvider
                 .AndroidViewModelFactory(requireActivity().getApplication())
                 .create(HomeViewModel.class);
@@ -124,7 +123,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadCurrentUserBookingDetails() {
-        mUserViewModel.getCurrentUser().observe(this, userResource -> {
+        mMainViewModel.getCurrentUser().observe(this, userResource -> {
             if (userResource.getStatus() == Resource.Status.SUCCESS) {
                 mUser = userResource.getData();
                 loadBookingBeginDates();
