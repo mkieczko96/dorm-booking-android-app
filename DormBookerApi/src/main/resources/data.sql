@@ -1230,10 +1230,8 @@ INSERT INTO [bookings] (begin_at, end_at, facility_id, user_id) VALUES
 
 INSERT INTO [roles] (name) VALUES
 ('USER'),
-('FACILITY_ADMIN'),
 ('ADMIN');
 
 INSERT INTO [users_roles] (user_id, roles_id) VALUES
 (412, 1),
-(412, 2),
-(412, 3);
+(412, 2);
