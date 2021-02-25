@@ -1,6 +1,7 @@
 package com.booker.ui.view.fragment;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.booker.R;
+import com.booker.model.PreferenceProvider;
 import com.booker.model.api.ApiClient;
+import com.booker.model.api.Resource;
 import com.booker.model.api.callbacks.PostReminderCallback;
+import com.booker.model.api.services.FacilityService;
 import com.booker.model.data.Booking;
 import com.booker.model.data.Facility;
 import com.booker.model.data.Reminder;
@@ -48,7 +56,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,39 +80,63 @@ public class CreateBookingFragment extends DialogFragment {
     private String[] mOptions;
     private String[] mMessages;
     private int[] mSeconds;
+    private NewBookingViewModel mNewViewModel;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        EventBus.getDefault().register(this);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        EventBus.getDefault().unregister(this);
+//    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_booking, container, false);
     }
 
+    @Getter @Setter
+    class NewBookingViewModel extends AndroidViewModel {
+
+        private final PreferenceProvider mProvider;
+        private final FacilityService mFacilityService;
+
+        public NewBookingViewModel(@NonNull Application application) {
+            super(application);
+            mProvider = new PreferenceProvider(application);
+            mFacilityService = ApiClient.getFacilityService();
+        }
+
+        // Both will be set in DialogFragment and then will be read in NewBookingFragment.
+        private MutableLiveData<LocalDateTime> mBeginDate;
+        private MutableLiveData<LocalDateTime> mEndDate;
+
+        private MutableLiveData<Resource<List<Facility>>> mFacilities;
+
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mBinding = FragmentCreateBookingBinding.bind(view);
+        mNewViewModel = new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
+                .create(NewBookingViewModel.class);
 
+        // Constant data loaded from resources (mainly).
         mOptions = getResources()
                 .getStringArray(R.array.notification_time_options);
         mMessages = getResources()
                 .getStringArray(R.array.notification_message_options);
         mSeconds = new int[]{0, 600, 900, 1800, 3600, 7200, 86400, 172800, 604800};
 
-        ActionMode.Callback actionMode = new CreateBookingActionMode();
-        mActionMode = requireActivity().startActionMode(actionMode);
-        mBinding = FragmentCreateBookingBinding.bind(view);
+        setActionToolbar();
         getFacilityDialogArrayList();
-        //setNotificationListWithDefaultValue();
+
 
         if (mEditBooking == null) {
             mActionMode.setTitle("New booking");
@@ -123,6 +157,11 @@ public class CreateBookingFragment extends DialogFragment {
 
         mBinding.beginDateTime.setOnClickListener(this::onDateTimeClick);
         mBinding.endDateTime.setOnClickListener(this::onDateTimeClick);
+    }
+
+    private void setActionToolbar() {
+        ActionMode.Callback actionMode = new CreateBookingActionMode(); // Maybe move inner class to external class?
+        mActionMode = requireActivity().startActionMode(actionMode);
     }
 
     public static CreateBookingFragment newInstance(User user, LocalDate date) {
